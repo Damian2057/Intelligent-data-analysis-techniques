@@ -4,13 +4,12 @@ import com.metaheuristics.algorithm.model.Specimen;
 import com.metaheuristics.readers.csv.CsvReader;
 import com.metaheuristics.readers.json.JsonReader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpecimenFactory {
 
-    public static List<Specimen> getSpecimens() throws IOException {
+    public static List<Specimen> getSpecimens() {
         List<Specimen> specimenList = new ArrayList<>();
         int populationSize = JsonReader.getPopulationSize();
         for (int i = 0; i < populationSize; i++) {
@@ -23,8 +22,12 @@ public class SpecimenFactory {
         List<Integer> chromosome = new ArrayList<>();
         int chromosomeSize = CsvReader.getBagPackItems().size();
         for (int i = 0; i < chromosomeSize; i++) {
-            chromosome.add(1); //TODO: random 1/0
+            chromosome.add(getInserted());
         }
         return chromosome;
+    }
+
+    private static int getInserted() {
+        return (int) (Math.random() * ((1) + 1));
     }
 }
