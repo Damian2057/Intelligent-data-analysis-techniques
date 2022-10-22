@@ -2,7 +2,8 @@ package com.metaheuristics.readers.json;
 
 public enum CrossoverType {
     ONEPOINT(1),
-    MULTIPOINT(3);
+    DOUBLEPOINT(2),
+    TRIPLEPOINT(3);
 
     private final int points;
 

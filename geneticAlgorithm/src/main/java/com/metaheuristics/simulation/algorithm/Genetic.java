@@ -17,4 +17,20 @@ public interface Genetic {
      * @param generation
      */
     void adaptationFunction(List<Specimen> generation);
+
+    /**
+     *
+     * @param generation
+     * @param numberOfParents
+     * @return
+     */
+    List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents);
+
+    /**
+     *
+     * @param generation
+     * @param numberOfParents
+     * @return
+     */
+    List<Specimen> rankingSelection(List<Specimen> generation, int numberOfParents);
 }

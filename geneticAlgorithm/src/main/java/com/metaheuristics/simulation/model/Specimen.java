@@ -12,6 +12,7 @@ public class Specimen implements Comparable<Specimen> {
     private List<Integer> gens;
     private double adaptation = 0.0;
     private boolean isCorrect = true;
+    private double probabilityOfChoice = 0.8;
 
     public Specimen(List<Integer> gens) {
         this.gens = gens;

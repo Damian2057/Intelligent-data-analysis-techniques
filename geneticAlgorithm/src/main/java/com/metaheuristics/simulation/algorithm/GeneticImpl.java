@@ -6,11 +6,14 @@ import com.metaheuristics.readers.json.JsonReader;
 import com.metaheuristics.simulation.model.Specimen;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class GeneticImpl implements Genetic {
 
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
+    private final Function<Specimen, Double> function = Specimen::getAdaptation;
 
     @Override
     public double adaptationFunction(Specimen specimen) {
@@ -40,6 +43,34 @@ public class GeneticImpl implements Genetic {
                 specimen.setAdaptation(adaptation);
             }
         }
+    }
+
+    @Override
+    public List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents) {
+        setProbabilityInPopulation(generation);
+        return null;
+    }
+
+
+    private void setProbabilityInPopulation(List<Specimen> generation) {
+        double adaptationSum = getAdaptationSum(generation);
+        Consumer<Specimen> consumer = x -> x.setProbabilityOfChoice(x.getAdaptation()/adaptationSum);
+        for (Specimen specimen : generation) {
+            consumer.accept(specimen);
+        }
+    }
+
+    private double getAdaptationSum(List<Specimen> generation) {
+        double adaptationSum = 0.0;
+        for (Specimen specimen : generation) {
+            adaptationSum += function.apply(specimen);
+        }
+        return adaptationSum;
+    }
+
+    @Override
+    public List<Specimen> rankingSelection(List<Specimen> generation, int numberOfParents) {
+        return null;
     }
 
 }
