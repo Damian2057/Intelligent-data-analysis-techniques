@@ -1,4 +1,4 @@
-package com.metaheuristics.readers.Json;
+package com.metaheuristics.readers.json;
 
 import org.json.*;
 
