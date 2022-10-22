@@ -1,41 +1,43 @@
 package com.metaheuristics.readers.json;
 
-import org.json.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static com.metaheuristics.readers.Const.*;
+
 public final class JsonReader {
 
     public static Mutation getMutationProperties() throws IOException {
-        JSONObject jsonObject = getConfig().getJSONObject("mutation");
+        JSONObject jsonObject = getConfig().getJSONObject(MUTATION.getProperty());
         return new Mutation
                 .MutationBuilder()
-                .isEnable(Optional.of(jsonObject.getBoolean("isEnable")))
-                .value(Optional.of(jsonObject.getDouble("value")))
+                .isEnable(Optional.of(jsonObject.getBoolean(ENABLE.getProperty())))
+                .value(Optional.of(jsonObject.getDouble(VALUE.getProperty())))
                 .build();
     }
 
     public static SelectionType getSelectionType() throws IOException {
-        return getConfig().getEnum(SelectionType.class, "selectionType");
+        return getConfig().getEnum(SelectionType.class, SELECTION.getProperty());
     }
 
     public static CrossoverType getCrossOverType() throws IOException {
-        return getConfig().getEnum(CrossoverType.class,"crossoverType");
+        return getConfig().getEnum(CrossoverType.class,CROSSOVER.getProperty());
     }
 
     public static int getBackpackCapacity() throws IOException {
-        return getConfig().getInt("backpackCapacity");
+        return getConfig().getInt(BACKPACK.name());
     }
 
     public static int getPopulationSize() throws IOException {
-        return getConfig().getInt("populationSize");
+        return getConfig().getInt(POPULATION.getProperty());
     }
 
     private static JSONObject getConfig() throws IOException {
-        Path filePath = Path.of("src/main/resources/config.json");
+        Path filePath = Path.of(CONFIG.getProperty());
         String jsonString = Files.readString(filePath);
         return new JSONObject(jsonString);
     }
