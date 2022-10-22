@@ -6,5 +6,6 @@
   "selectionType": "ROULETTE",
   "crossoverType": "ONEPOINT",
   "backpackCapacity": 640418,
-  "populationSize": 1000
+  "populationSize": 10000,
+  "numberOfIterations": 1000
 }

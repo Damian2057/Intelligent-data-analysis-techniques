@@ -36,6 +36,10 @@ public final class JsonReader {
         return getConfig().getInt(POPULATION.getProperty());
     }
 
+    public static int getNumberOfIterations() throws IOException {
+        return getConfig().getInt(ITERATIONS.getProperty());
+    }
+
     private static JSONObject getConfig() throws IOException {
         Path filePath = Path.of(CONFIG.getProperty());
         String jsonString = Files.readString(filePath);

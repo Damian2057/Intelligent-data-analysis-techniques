@@ -10,7 +10,8 @@ public enum Const {
     ENABLE("isEnable"),
     VALUE("value"),
     COMMA_DELIMITER(","),
-    ITEMS("src/main/resources/objects.csv");
+    ITEMS("src/main/resources/objects.csv"),
+    ITERATIONS("numberOfIterations");
 
 
     private final String property;

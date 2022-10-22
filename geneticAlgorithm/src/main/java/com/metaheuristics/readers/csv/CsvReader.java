@@ -12,7 +12,7 @@ import java.util.List;
 import static com.metaheuristics.readers.Const.COMMA_DELIMITER;
 import static com.metaheuristics.readers.Const.ITEMS;
 
-public class CsvReader {
+public final class CsvReader {
 
     public static List<BagPackItem> getBagPackItems() {
         List<BagPackItem> items = new ArrayList<>();
