@@ -10,25 +10,16 @@ import java.util.List;
 
 public class SpecimenFactory {
 
-    private static final int populationSize;
-
-    static {
-        try {
-            populationSize = JsonReader.getPopulationSize();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static List<Specimen> getSpecimens() {
+    public static List<Specimen> getSpecimens() throws IOException {
         List<Specimen> specimenList = new ArrayList<>();
+        int populationSize = JsonReader.getPopulationSize();
         for (int i = 0; i < populationSize; i++) {
             specimenList.add(new Specimen(generateChromosome()));
         }
         return specimenList;
     }
 
-    private static List<Integer> generateChromosome(){
+    private static List<Integer> generateChromosome() {
         List<Integer> chromosome = new ArrayList<>();
         int chromosomeSize = CsvReader.getBagPackItems().size();
         for (int i = 0; i < chromosomeSize; i++) {
