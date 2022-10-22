@@ -49,6 +49,8 @@ public class AlgorithmImpl implements Algorithm {
             //calculate adaptation for a whole generation
             genetic.adaptationFunction(generation);
         }
+
+        logger.info("The simulation is over");
     }
 
     @Override
