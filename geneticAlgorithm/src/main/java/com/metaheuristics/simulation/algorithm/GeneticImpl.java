@@ -11,14 +11,17 @@ import com.metaheuristics.simulation.model.Specimen;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 public class GeneticImpl implements Genetic {
 
     private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
     private final static Mutation mutation = JsonReader.getMutationProperties();
+    private final Logger logger = Logger.getLogger(Genetic.class.getSimpleName());
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
     private final Function<Specimen, Double> function = Specimen::getAdaptation;
+    private boolean lock = true;
 
     @Override
     public double adaptationFunction(Specimen specimen) {
@@ -47,6 +50,10 @@ public class GeneticImpl implements Genetic {
             } else {
                 specimen.setAdaptation(adaptation);
                 specimen.setCorrect(true);
+                if(lock) {
+                    logger.info("Adaptation started with value: " + adaptation);
+                    lock = false;
+                }
             }
         }
     }
@@ -184,6 +191,7 @@ public class GeneticImpl implements Genetic {
 
     private void mutationChance(List<Specimen> newGeneration) {
         if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability()) {
+            logger.info("The gene has mutated");
             Random rand = new Random();
             newGeneration.get(rand.nextInt(newGeneration.size())).reverseSingleGen(random());
         }

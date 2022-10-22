@@ -13,7 +13,8 @@ public enum Const {
     COMMA_DELIMITER(","),
     ITEMS("src/main/resources/objects.csv"),
     ITERATIONS("numberOfIterations"),
-    PARENTS("numberOfParents");
+    PARENTS("numberOfParents"),
+    DISPLAY("display");
 
 
     private final String property;

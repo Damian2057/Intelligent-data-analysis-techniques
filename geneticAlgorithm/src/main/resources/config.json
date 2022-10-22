@@ -11,5 +11,7 @@
   "backpackCapacity": 640418,
   "populationSize": 40000,
   "numberOfIterations": 100,
-  "numberOfParents": 1000
+  "numberOfParents": 1000,
+
+  "display": 10
 }
