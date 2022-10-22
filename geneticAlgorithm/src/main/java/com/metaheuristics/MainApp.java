@@ -1,14 +1,13 @@
 package com.metaheuristics;
 
 
-import com.metaheuristics.readers.csv.CsvReader;
-import com.metaheuristics.readers.json.JsonReader;
-
-import java.io.IOException;
+import com.metaheuristics.simulation.algorithm.GeneticAlgorithm;
+import com.metaheuristics.simulation.algorithm.GeneticAlgorithmImpl;
 
 public class MainApp {
 
-    public static void main(String[] args) throws IOException {
-        System.out.println(JsonReader.getBackpackCapacity());
+    public static void main(String[] args) {
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithmImpl();
+        geneticAlgorithm.startSimulation();
     }
 }

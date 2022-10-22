@@ -1,4 +1,4 @@
-package com.metaheuristics.model;
+package com.metaheuristics.readers.csv;
 
 import lombok.*;
 

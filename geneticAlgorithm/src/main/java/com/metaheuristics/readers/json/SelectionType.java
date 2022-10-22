@@ -9,6 +9,10 @@ public enum SelectionType {
         this.ranking = ranking;
     }
 
+    public String getRanking() {
+        return ranking;
+    }
+
     @Override
     public String toString() {
         return "SelectionType{" +
