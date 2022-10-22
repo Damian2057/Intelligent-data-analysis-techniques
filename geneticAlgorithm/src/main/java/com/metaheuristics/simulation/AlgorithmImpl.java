@@ -38,7 +38,7 @@ public class AlgorithmImpl implements Algorithm {
             List<Specimen> parents = selectionType == SelectionType.ROULETTE ?
                     genetic.rouletteSelection(generation, numberOfParents)
                     : genetic.tournamentSelection(generation, numberOfParents);
-            this.generation = genetic.crossOver(generation.subList(0,10), populationSize);
+            this.generation = genetic.crossOver(parents, populationSize);
 
 
         }

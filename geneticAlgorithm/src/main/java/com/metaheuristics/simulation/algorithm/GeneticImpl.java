@@ -133,13 +133,12 @@ public class GeneticImpl implements Genetic {
     private List<Specimen> inheritedChromosome(List<Integer> parent1, List<Integer> parent2) {
         int barrier = random();
         List<Specimen> result = new ArrayList<>();
-        List<Integer> chromosome = new ArrayList<>(getRange(parent1, 0, barrier));
-        chromosome.addAll(getRange(parent2, barrier, 26));
-        result.add(new Specimen(chromosome));
-        chromosome.clear();
-        chromosome.addAll(getRange(parent2, 0, barrier));
-        chromosome.addAll(getRange(parent1, barrier, 26));
-        result.add(new Specimen(chromosome));
+        List<Integer> chromosome1 = new ArrayList<>(getRange(parent1, 0, barrier));
+        chromosome1.addAll(getRange(parent2, barrier, 26));
+        result.add(new Specimen(chromosome1));
+        List<Integer> chromosome2 = new ArrayList<>(getRange(parent2, 0, barrier));
+        chromosome2.addAll(getRange(parent1, barrier, 26));
+        result.add(new Specimen(chromosome2));
         return result;
     }
 
@@ -156,7 +155,7 @@ public class GeneticImpl implements Genetic {
     }
 
     private int random() {
-        return new Random().nextInt((26 - 1) + 1) + 1;
+        return new Random().nextInt((25 - 1) + 1) + 1;
     }
 
 }
