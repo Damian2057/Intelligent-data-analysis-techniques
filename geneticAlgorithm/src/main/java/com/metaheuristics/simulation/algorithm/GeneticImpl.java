@@ -5,21 +5,23 @@ import com.metaheuristics.readers.csv.CsvReader;
 import com.metaheuristics.readers.json.CrossOver;
 import com.metaheuristics.readers.json.CrossoverType;
 import com.metaheuristics.readers.json.JsonReader;
-import com.metaheuristics.simulation.factory.SpecimenFactory;
+import com.metaheuristics.readers.json.Mutation;
 import com.metaheuristics.simulation.model.Specimen;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 public class GeneticImpl implements Genetic {
 
+    private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
+    private final static Mutation mutation = JsonReader.getMutationProperties();
+    private final Logger logger = Logger.getLogger(Genetic.class.getSimpleName());
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
-    private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
     private final Function<Specimen, Double> function = Specimen::getAdaptation;
+    private boolean lock = true;
 
     @Override
     public double adaptationFunction(Specimen specimen) {
@@ -47,6 +49,11 @@ public class GeneticImpl implements Genetic {
                 specimen.setCorrect(false);
             } else {
                 specimen.setAdaptation(adaptation);
+                specimen.setCorrect(true);
+                if(lock) {
+                    logger.info("Adaptation started with value: " + adaptation);
+                    lock = false;
+                }
             }
         }
     }
@@ -57,7 +64,6 @@ public class GeneticImpl implements Genetic {
         setProbabilityInPopulation(generation);
         return selected;
     }
-
 
     private void setProbabilityInPopulation(List<Specimen> generation) {
         double adaptationSum = getAdaptationSum(generation);
@@ -115,35 +121,58 @@ public class GeneticImpl implements Genetic {
     }
 
     @Override
-    public List<Specimen> crossOver(List<Specimen> parents, int populationSize) {
+    public List<Specimen> crossGenes(List<Specimen> parents, int populationSize) {
         return crossOver.getCrossoverType() == CrossoverType.ONEPOINT
                 ? onePointCross(parents, populationSize) : doublePointCross(parents, populationSize);
     }
 
-
     private List<Specimen> onePointCross(List<Specimen> parents, int populationSize) {
         List<Specimen> newGeneration = new ArrayList<>();
         for (int i = 0; i < populationSize / 2; i++) {
-            newGeneration.addAll(inheritedChromosome(parents.get(0).getGens(), parents.get(1).getGens()));
+            List<Specimen> selectedParents = getRandomParents(parents);
+            newGeneration.addAll(inheritedSingleChromosome(selectedParents.get(0).getGens(), selectedParents.get(1).getGens()));
         }
+        mutationChance(newGeneration);
 
         return newGeneration;
     }
 
-    private List<Specimen> inheritedChromosome(List<Integer> parent1, List<Integer> parent2) {
-        int barrier = random();
+    private List<Specimen> getRandomParents(List<Specimen> parents) {
+        List<Specimen> copyOfList = new ArrayList<>(parents);
+        List<Specimen> selectedParents = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            int randomIndex = new Random().nextInt(copyOfList.size());
+            Specimen randomElement = copyOfList.get(randomIndex);
+            copyOfList.remove(randomIndex);
+            selectedParents.add(randomElement);
+        }
+
+        return selectedParents;
+    }
+
+    private List<Specimen> inheritedSingleChromosome(List<Integer> parent1, List<Integer> parent2) {
+        int barrier = random(1);
         List<Specimen> result = new ArrayList<>();
-        List<Integer> chromosome1 = new ArrayList<>(getRange(parent1, 0, barrier));
-        chromosome1.addAll(getRange(parent2, barrier, 26));
-        result.add(new Specimen(chromosome1));
-        List<Integer> chromosome2 = new ArrayList<>(getRange(parent2, 0, barrier));
-        chromosome2.addAll(getRange(parent1, barrier, 26));
-        result.add(new Specimen(chromosome2));
+        result.add(createSpecimen(parent1, parent2, barrier));
+        result.add(createSpecimen(parent2, parent1, barrier));
+
         return result;
     }
 
-    private List<Specimen> doublePointCross(List<Specimen> parents, int populationSize) {
-        return null;
+    private Specimen createSpecimen(List<Integer> parent1, List<Integer> parent2, int barrier) {
+        List<Integer> chromosome = new ArrayList<>();
+        if((0.0 + (1) * new Random().nextDouble()) > crossOver.getProbability()) {
+            if(new Random().nextBoolean()) {
+                chromosome.addAll(new ArrayList<>(parent1));
+            } else {
+                chromosome.addAll(new ArrayList<>(parent2));
+            }
+        } else {
+            chromosome.addAll(getRange(parent1, 0, barrier));
+            chromosome.addAll(getRange(parent2, barrier, 26));
+        }
+
+        return new Specimen(chromosome);
     }
 
     private List<Integer> getRange(List<Integer> list, int start, int end) {
@@ -151,11 +180,58 @@ public class GeneticImpl implements Genetic {
         for (int i = start; i < end; i++) {
             newList.add(list.get(i));
         }
+
         return newList;
     }
 
-    private int random() {
-        return new Random().nextInt((25 - 1) + 1) + 1;
+    private int random(int min) {
+        return new Random().nextInt(26 - min) + min;
+    }
+
+    private void mutationChance(List<Specimen> newGeneration) {
+        if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability()) {
+            logger.info("The gene has mutated");
+            Random rand = new Random();
+            newGeneration.get(rand.nextInt(newGeneration.size())).reverseSingleGen(random(1));
+        }
+    }
+
+    private List<Specimen> doublePointCross(List<Specimen> parents, int populationSize) {
+        List<Specimen> newGeneration = new ArrayList<>();
+        for (int i = 0; i < populationSize / 2; i++) {
+            List<Specimen> selectedParents = getRandomParents(parents);
+            newGeneration.addAll(inheritedDoubleChromosome(selectedParents.get(0).getGens(), selectedParents.get(1).getGens()));
+        }
+        mutationChance(newGeneration);
+
+        return newGeneration;
+    }
+
+    private List<Specimen> inheritedDoubleChromosome(List<Integer> parent1, List<Integer> parent2) {
+        int barrier1 = random(1);
+        int barrier2 = random(barrier1);
+        List<Specimen> result = new ArrayList<>();
+        result.add(createSpecimen(parent1, parent2, barrier1, barrier2));
+        result.add(createSpecimen(parent2, parent1, barrier1, barrier2));
+
+        return result;
+    }
+
+    private Specimen createSpecimen(List<Integer> parent1, List<Integer> parent2, int barrier1, int barrier2) {
+        List<Integer> chromosome = new ArrayList<>();
+        if((0.0 + (1) * new Random().nextDouble()) > crossOver.getProbability()) {
+            if(new Random().nextBoolean()) {
+                chromosome.addAll(new ArrayList<>(parent1));
+            } else {
+                chromosome.addAll(new ArrayList<>(parent2));
+            }
+        } else {
+            chromosome.addAll(getRange(parent1, 0, barrier1));
+            chromosome.addAll(getRange(parent1, barrier1, barrier2));
+            chromosome.addAll(getRange(parent2, barrier2, 26));
+        }
+
+        return new Specimen(chromosome);
     }
 
 }

@@ -5,6 +5,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 @ToString
 @Setter
@@ -24,7 +25,6 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
         return Double.compare(o.getAdaptation(), getAdaptation());
     }
 
-
     public List<Integer> getGens() {
         return Collections.unmodifiableList(gens);
     }
@@ -41,6 +41,11 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
         return probabilityOfChoice;
     }
 
+    public void reverseSingleGen(int index) {
+        Function<Integer, Integer> function = x -> x == 0 ? 1 : 0;
+        gens.set(index, function.apply(gens.get(index)));
+    }
+
     @Override
     public Specimen clone() {
         try {
@@ -52,4 +57,5 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
             throw new AssertionError();
         }
     }
+
 }

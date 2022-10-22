@@ -18,12 +18,12 @@ public class SpecimenFactory {
     public List<Specimen> getSpecimens() {
         List<Specimen> specimenList = new ArrayList<>();
         for (int i = 0; i < populationSize; i++) {
-            specimenList.add(new Specimen(generateChromosome()));
+            specimenList.add(new Specimen(generateTotallyRandomChromosome()));
         }
         return specimenList;
     }
 
-    private List<Integer> generateChromosome() {
+    private List<Integer> generateTotallyRandomChromosome() {
         List<Integer> chromosome = new ArrayList<>();
         for (int i = 0; i < chromosomeSize; i++) {
             chromosome.add(random());
@@ -34,4 +34,21 @@ public class SpecimenFactory {
     private int random() {
         return (int) (Math.random() * ((1) + 1));
     }
+
+    @Deprecated
+    private List<Integer> simulatedRandomChromosome() {
+        List<Integer> chromosome = new ArrayList<>();
+        int max = 0;
+        for (int i = 0; i < chromosomeSize; i++) {
+            int value = random();
+            if(value == 1 && max < 12) {
+                chromosome.add(1);
+                max++;
+            } else {
+                chromosome.add(0);
+            }
+        }
+        return chromosome;
+    }
+
 }

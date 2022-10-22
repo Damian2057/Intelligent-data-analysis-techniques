@@ -78,6 +78,14 @@ public final class JsonReader {
         }
     }
 
+    public static int getDisplay() {
+        try {
+            return getConfig().getInt(DISPLAY.getProperty());
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Incorrect data in the population size configuration");
+        }
+    }
+
     private static JSONObject getConfig() throws IOException {
         Path filePath = Path.of(CONFIG.getProperty());
         String jsonString = Files.readString(filePath);

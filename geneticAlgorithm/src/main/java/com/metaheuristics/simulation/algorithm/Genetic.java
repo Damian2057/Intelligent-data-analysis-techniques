@@ -38,5 +38,5 @@ public interface Genetic {
      * @param parents selected representatives of the species
      * @param populationSize number of Specimen to be produced
      */
-    List<Specimen> crossOver(List<Specimen> parents, int populationSize);
+    List<Specimen> crossGenes(List<Specimen> parents, int populationSize);
 }
