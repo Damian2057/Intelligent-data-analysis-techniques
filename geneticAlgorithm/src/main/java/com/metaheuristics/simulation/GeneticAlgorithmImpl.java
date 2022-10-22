@@ -13,6 +13,7 @@ public class GeneticAlgorithmImpl implements GeneticAlgorithm {
 
     private final List<Specimen> generation;
     private final static Genetic genetic = new GeneticImpl();
+    private final static SpecimenFactory factory = new SpecimenFactory();
     private final static int numberOfIterations = JsonReader.getNumberOfIterations();
 
     /**
@@ -21,7 +22,7 @@ public class GeneticAlgorithmImpl implements GeneticAlgorithm {
      * calculate adaptation for a whole generation
      */
     public GeneticAlgorithmImpl() {
-        this.generation = new ArrayList<>(SpecimenFactory.getSpecimens());
+        this.generation = new ArrayList<>(factory.getSpecimens());
         genetic.adaptationFunction(generation);
     }
 
