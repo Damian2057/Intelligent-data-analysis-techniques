@@ -12,7 +12,8 @@ public enum Const {
     PROBABILITY("probability"),
     COMMA_DELIMITER(","),
     ITEMS("src/main/resources/objects.csv"),
-    ITERATIONS("numberOfIterations");
+    ITERATIONS("numberOfIterations"),
+    PARENTS("numberOfParents");
 
 
     private final String property;
