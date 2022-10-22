@@ -124,10 +124,23 @@ public class GeneticImpl implements Genetic {
     private List<Specimen> onePointCross(List<Specimen> parents, int populationSize) {
         List<Specimen> newGeneration = new ArrayList<>();
         for (int i = 0; i < populationSize / 2; i++) {
-            newGeneration.addAll(inheritedChromosome(parents.get(0).getGens(), parents.get(1).getGens()));
+            List<Specimen> selectedParents = getRandomParents(parents);
+            newGeneration.addAll(inheritedChromosome(selectedParents.get(0).getGens(), selectedParents.get(1).getGens()));
         }
 
         return newGeneration;
+    }
+
+    private List<Specimen> getRandomParents(List<Specimen> parents) {
+        List<Specimen> copyOfList = new ArrayList<>(parents);
+        List<Specimen> selectedParents = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            int randomIndex = new Random().nextInt(copyOfList.size());
+            Specimen randomElement = copyOfList.get(randomIndex);
+            copyOfList.remove(randomIndex);
+            selectedParents.add(randomElement);
+        }
+        return selectedParents;
     }
 
     private List<Specimen> inheritedChromosome(List<Integer> parent1, List<Integer> parent2) {
