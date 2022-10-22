@@ -1,5 +1,7 @@
 package com.metaheuristics.readers.csv;
 
+import com.metaheuristics.exceptions.LogicException;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,7 +27,7 @@ public final class CsvReader {
                         .price(Integer.parseInt(values[3])).build());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new LogicException("Error in reading available objects");
         }
         return items;
     }
