@@ -1,0 +1,8 @@
+{
+  "mutation": {
+    "isEnable": true,
+    "value": 0.01
+  },
+  "selectionType": "ROULETTE",
+  "crossoverType": "ONEPOINT"
+}
