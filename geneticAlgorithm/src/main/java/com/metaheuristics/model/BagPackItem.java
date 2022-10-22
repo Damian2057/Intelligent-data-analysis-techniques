@@ -1,11 +1,13 @@
 package com.metaheuristics.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
 public class BagPackItem {
+    private int id;
+    private String name;
+    private int weight;
+    private int price;
 }
