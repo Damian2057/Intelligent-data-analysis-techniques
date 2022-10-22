@@ -9,28 +9,29 @@ import java.util.List;
 
 public class SpecimenFactory {
 
+    private static final int populationSize = JsonReader.getPopulationSize();
+    private static final int chromosomeSize = CsvReader.getBagPackItems().size();
+
     /**
      * @return the first generation
      */
-    public static List<Specimen> getSpecimens() {
+    public List<Specimen> getSpecimens() {
         List<Specimen> specimenList = new ArrayList<>();
-        int populationSize = JsonReader.getPopulationSize();
         for (int i = 0; i < populationSize; i++) {
             specimenList.add(new Specimen(generateChromosome()));
         }
         return specimenList;
     }
 
-    private static List<Integer> generateChromosome() {
+    private List<Integer> generateChromosome() {
         List<Integer> chromosome = new ArrayList<>();
-        int chromosomeSize = CsvReader.getBagPackItems().size();
         for (int i = 0; i < chromosomeSize; i++) {
             chromosome.add(random());
         }
         return chromosome;
     }
 
-    private static int random() {
+    private int random() {
         return (int) (Math.random() * ((1) + 1));
     }
 }

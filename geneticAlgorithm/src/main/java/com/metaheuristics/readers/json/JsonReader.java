@@ -70,6 +70,14 @@ public final class JsonReader {
         }
     }
 
+    public static int getNumberOfParents() {
+        try {
+            return getConfig().getInt(PARENTS.getProperty());
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Incorrect data in the number of parents configuration");
+        }
+    }
+
     private static JSONObject getConfig() throws IOException {
         Path filePath = Path.of(CONFIG.getProperty());
         String jsonString = Files.readString(filePath);
