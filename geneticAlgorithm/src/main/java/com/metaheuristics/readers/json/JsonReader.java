@@ -47,7 +47,7 @@ public final class JsonReader {
 
     public static int getBackpackCapacity() {
         try {
-            return getConfig().getInt(BACKPACK.name());
+            return getConfig().getInt(BACKPACK.getProperty());
         } catch (IOException e) {
             throw new InvalidTypeException("Incorrect data in the size of backpack configuration");
         }

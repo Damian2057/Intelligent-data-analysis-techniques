@@ -9,6 +9,6 @@
   },
   "selectionType": "ROULETTE",
   "backpackCapacity": 640418,
-  "populationSize": 10000,
+  "populationSize": 20000,
   "numberOfIterations": 1000
 }

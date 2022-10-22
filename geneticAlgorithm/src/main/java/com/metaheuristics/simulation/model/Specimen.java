@@ -7,13 +7,18 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-public class Specimen {
+public class Specimen implements Comparable<Specimen> {
 
     private List<Integer> gens;
-    private double adaptation = 0;
+    private double adaptation = 0.0;
     private boolean isCorrect = true;
 
     public Specimen(List<Integer> gens) {
         this.gens = gens;
+    }
+
+    @Override
+    public int compareTo(Specimen o) {
+        return Double.compare(getAdaptation(), o.getAdaptation());
     }
 }

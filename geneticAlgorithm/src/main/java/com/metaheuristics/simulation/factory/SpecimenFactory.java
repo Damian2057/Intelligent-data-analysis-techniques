@@ -9,6 +9,9 @@ import java.util.List;
 
 public class SpecimenFactory {
 
+    /**
+     * @return the first generation
+     */
     public static List<Specimen> getSpecimens() {
         List<Specimen> specimenList = new ArrayList<>();
         int populationSize = JsonReader.getPopulationSize();
@@ -22,12 +25,12 @@ public class SpecimenFactory {
         List<Integer> chromosome = new ArrayList<>();
         int chromosomeSize = CsvReader.getBagPackItems().size();
         for (int i = 0; i < chromosomeSize; i++) {
-            chromosome.add(getInserted());
+            chromosome.add(random());
         }
         return chromosome;
     }
 
-    private static int getInserted() {
+    private static int random() {
         return (int) (Math.random() * ((1) + 1));
     }
 }
