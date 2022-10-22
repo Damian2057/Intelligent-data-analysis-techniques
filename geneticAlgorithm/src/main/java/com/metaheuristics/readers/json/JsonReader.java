@@ -1,6 +1,7 @@
 package com.metaheuristics.readers.json;
 
 import com.metaheuristics.exceptions.InvalidTypeException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -19,16 +20,16 @@ public final class JsonReader {
                     .isEnable(jsonObject.getBoolean(ENABLE.getProperty()))
                     .probability(jsonObject.getDouble(PROBABILITY.getProperty()))
                     .build();
-        } catch (IOException e) {
-            throw new InvalidTypeException("Incorrect data in the mutation in the configuration");
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Incorrect data in the mutation configuration");
         }
     }
 
     public static SelectionType getSelectionType() {
         try {
             return getConfig().getEnum(SelectionType.class, SELECTION.getProperty());
-        } catch (IOException e) {
-            throw new InvalidTypeException("Invalid selection type in the configuration");
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Invalid selection type configuration");
         }
     }
 
@@ -40,15 +41,15 @@ public final class JsonReader {
                     .crossoverType(jsonObject.getEnum(CrossoverType.class, CROSSOVERTYPE.getProperty()))
                     .probability(jsonObject.getDouble(PROBABILITY.getProperty()))
                     .build();
-        } catch (IOException e) {
-            throw new InvalidTypeException("Incorrect data in the CrossOver in the configuration");
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Incorrect data in the CrossOver configuration");
         }
     }
 
     public static int getBackpackCapacity() {
         try {
-            return getConfig().getInt(BACKPACK.name());
-        } catch (IOException e) {
+            return getConfig().getInt(BACKPACK.getProperty());
+        } catch (IOException | JSONException e) {
             throw new InvalidTypeException("Incorrect data in the size of backpack configuration");
         }
     }
@@ -56,7 +57,7 @@ public final class JsonReader {
     public static int getPopulationSize() {
         try {
             return getConfig().getInt(POPULATION.getProperty());
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             throw new InvalidTypeException("Incorrect data in the population size configuration");
         }
     }
@@ -64,7 +65,7 @@ public final class JsonReader {
     public static int getNumberOfIterations() {
         try {
             return getConfig().getInt(ITERATIONS.getProperty());
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             throw new InvalidTypeException("Incorrect data in the number of iterations in configuration");
         }
     }
