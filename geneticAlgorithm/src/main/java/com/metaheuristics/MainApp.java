@@ -1,7 +1,7 @@
 package com.metaheuristics;
 
 
-import com.metaheuristics.algorithm.factory.SpecimenFactory;
+import com.metaheuristics.simulation.factory.SpecimenFactory;
 
 public class MainApp {
 

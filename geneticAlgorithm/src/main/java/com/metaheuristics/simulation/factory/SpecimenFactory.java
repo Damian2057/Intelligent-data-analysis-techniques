@@ -1,6 +1,6 @@
-package com.metaheuristics.algorithm.factory;
+package com.metaheuristics.simulation.factory;
 
-import com.metaheuristics.algorithm.model.Specimen;
+import com.metaheuristics.simulation.model.Specimen;
 import com.metaheuristics.readers.csv.CsvReader;
 import com.metaheuristics.readers.json.JsonReader;
 
