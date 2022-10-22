@@ -7,9 +7,9 @@
     "crossoverType": "ONEPOINT",
     "probability": 0.5
   },
-  "selectionType": "ROULETTE",
+  "selectionType": "TOURNAMENT",
   "backpackCapacity": 640418,
   "populationSize": 40000,
-  "numberOfIterations": 1000,
+  "numberOfIterations": 100,
   "numberOfParents": 10
 }

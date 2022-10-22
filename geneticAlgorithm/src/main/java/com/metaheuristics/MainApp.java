@@ -1,14 +1,13 @@
 package com.metaheuristics;
 
 
-import com.metaheuristics.simulation.GeneticAlgorithm;
-import com.metaheuristics.simulation.GeneticAlgorithmImpl;
+import com.metaheuristics.simulation.Algorithm;
+import com.metaheuristics.simulation.AlgorithmImpl;
 
 public class MainApp {
 
     public static void main(String[] args) {
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithmImpl();
-        geneticAlgorithm.startSimulation();
-//        System.out.println(geneticAlgorithm.getGeneration());
+        Algorithm algorithm = new AlgorithmImpl();
+        algorithm.startSimulation();
     }
 }

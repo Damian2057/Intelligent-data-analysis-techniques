@@ -4,7 +4,7 @@ import com.metaheuristics.simulation.model.Specimen;
 
 import java.util.List;
 
-public interface GeneticAlgorithm {
+public interface Algorithm {
 
     /**
      * evolutionary loop
