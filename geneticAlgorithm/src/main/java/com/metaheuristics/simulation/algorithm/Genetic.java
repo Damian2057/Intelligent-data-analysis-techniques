@@ -7,30 +7,30 @@ import java.util.List;
 public interface Genetic {
 
     /**
-     * @param specimen
+     * @param specimen single specimen
      * @return the value of an individual's adaptation
      */
     double adaptationFunction(Specimen specimen);
 
     /**
      * calculate adaptation for a whole generation
-     * @param generation
+     * @param generation whole generation
      */
     void adaptationFunction(List<Specimen> generation);
 
     /**
-     *
-     * @param generation
-     * @param numberOfParents
-     * @return
+     * Roulette Selection
+     * @param generation whole generation
+     * @param numberOfParents number Of Parents
+     * @return list of selected parents
      */
     List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents);
 
     /**
-     *
-     * @param generation
-     * @param numberOfParents
-     * @return
+     * Ranking Selection
+     * @param generation whole generation
+     * @param numberOfParents number Of Parents
+     * @return list of selected parents
      */
     List<Specimen> rankingSelection(List<Specimen> generation, int numberOfParents);
 }
