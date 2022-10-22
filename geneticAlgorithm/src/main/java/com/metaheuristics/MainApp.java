@@ -1,14 +1,12 @@
 package com.metaheuristics;
 
 
-import com.metaheuristics.readers.csv.CsvReader;
-import com.metaheuristics.readers.json.JsonReader;
-
-import java.io.IOException;
+import com.metaheuristics.algorithm.factory.SpecimenFactory;
+import com.metaheuristics.algorithm.model.Specimen;
 
 public class MainApp {
 
     public static void main(String[] args) {
-        System.out.println(CsvReader.getBagPackItems());
+        System.out.println(SpecimenFactory.getSpecimens());
     }
 }

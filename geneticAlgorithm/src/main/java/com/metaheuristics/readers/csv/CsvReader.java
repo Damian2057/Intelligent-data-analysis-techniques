@@ -1,8 +1,5 @@
 package com.metaheuristics.readers.csv;
 
-import com.metaheuristics.model.BagPackItem;
-import com.metaheuristics.readers.Const;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
