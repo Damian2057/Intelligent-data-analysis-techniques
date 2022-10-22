@@ -9,6 +9,6 @@ import java.io.IOException;
 public class MainApp {
 
     public static void main(String[] args) throws IOException {
-        System.out.println(JsonReader.getBackpackCapacity());
+        System.out.println(JsonReader.getPopulationSize());
     }
 }

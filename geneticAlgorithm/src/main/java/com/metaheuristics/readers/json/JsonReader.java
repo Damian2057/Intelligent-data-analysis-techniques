@@ -30,6 +30,10 @@ public final class JsonReader {
         return getConfig().getInt("backpackCapacity");
     }
 
+    public static int getPopulationSize() throws IOException {
+        return getConfig().getInt("populationSize");
+    }
+
     private static JSONObject getConfig() throws IOException {
         Path filePath = Path.of("src/main/resources/config.json");
         String jsonString = Files.readString(filePath);
