@@ -35,6 +35,7 @@ public class SpecimenFactory {
         return (int) (Math.random() * ((1) + 1));
     }
 
+    @Deprecated
     private List<Integer> simulatedRandomChromosome() {
         List<Integer> chromosome = new ArrayList<>();
         int max = 0;

@@ -5,6 +5,7 @@ import com.metaheuristics.readers.csv.CsvReader;
 import com.metaheuristics.readers.json.CrossOver;
 import com.metaheuristics.readers.json.CrossoverType;
 import com.metaheuristics.readers.json.JsonReader;
+import com.metaheuristics.readers.json.Mutation;
 import com.metaheuristics.simulation.model.Specimen;
 
 import java.util.*;
@@ -13,9 +14,10 @@ import java.util.function.Function;
 
 public class GeneticImpl implements Genetic {
 
+    private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
+    private final static Mutation mutation = JsonReader.getMutationProperties();
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
-    private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
     private final Function<Specimen, Double> function = Specimen::getAdaptation;
 
     @Override
@@ -123,7 +125,7 @@ public class GeneticImpl implements Genetic {
             List<Specimen> selectedParents = getRandomParents(parents);
             newGeneration.addAll(inheritedChromosome(selectedParents.get(0).getGens(), selectedParents.get(1).getGens()));
         }
-
+        mutationChance(newGeneration);
         return newGeneration;
     }
 
@@ -145,7 +147,6 @@ public class GeneticImpl implements Genetic {
         List<Specimen> result = new ArrayList<>();
         result.add(createSpecimen(parent1, parent2, barrier));
         result.add(createSpecimen(parent2, parent1, barrier));
-        //TODO: probability of crossing
         return result;
     }
 
@@ -181,4 +182,10 @@ public class GeneticImpl implements Genetic {
         return new Random().nextInt((25 - 1) + 1) + 1;
     }
 
+    private void mutationChance(List<Specimen> newGeneration) {
+        if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability()) {
+            Random rand = new Random();
+            newGeneration.get(rand.nextInt(newGeneration.size())).reverseSingleGen(random());
+        }
+    }
 }
