@@ -1,6 +1,5 @@
 package com.metaheuristics.simulation;
 
-import com.metaheuristics.readers.json.CrossOver;
 import com.metaheuristics.readers.json.JsonReader;
 import com.metaheuristics.readers.json.SelectionType;
 import com.metaheuristics.simulation.algorithm.Genetic;
@@ -38,9 +37,10 @@ public class AlgorithmImpl implements Algorithm {
             List<Specimen> parents = selectionType == SelectionType.ROULETTE ?
                     genetic.rouletteSelection(generation, numberOfParents)
                     : genetic.tournamentSelection(generation, numberOfParents);
-            this.generation = genetic.crossOver(parents, populationSize);
-
-
+            //crossing genes
+            this.generation = genetic.crossGenes(parents, populationSize);
+            //calculate adaptation for a whole generation
+            genetic.adaptationFunction(generation);
         }
     }
 
