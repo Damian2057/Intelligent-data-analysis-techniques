@@ -1,10 +1,13 @@
 {
   "mutation": {
     "isEnable": true,
-    "value": 0.01
+    "probability": 0.01
+  },
+  "crossOver": {
+    "crossoverType": "ONEPOINT",
+    "probability": 0.5
   },
   "selectionType": "ROULETTE",
-  "crossoverType": "ONEPOINT",
   "backpackCapacity": 640418,
   "populationSize": 10000,
   "numberOfIterations": 1000

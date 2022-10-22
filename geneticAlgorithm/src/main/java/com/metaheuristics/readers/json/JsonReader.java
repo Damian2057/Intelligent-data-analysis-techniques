@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static com.metaheuristics.readers.Const.*;
 
@@ -17,8 +16,8 @@ public final class JsonReader {
             JSONObject jsonObject = getConfig().getJSONObject(MUTATION.getProperty());
             return new Mutation
                     .MutationBuilder()
-                    .isEnable(Optional.of(jsonObject.getBoolean(ENABLE.getProperty())))
-                    .value(Optional.of(jsonObject.getDouble(VALUE.getProperty())))
+                    .isEnable(jsonObject.getBoolean(ENABLE.getProperty()))
+                    .probability(jsonObject.getDouble(PROBABILITY.getProperty()))
                     .build();
         } catch (IOException e) {
             throw new InvalidTypeException("Incorrect data in the mutation in the configuration");
@@ -33,11 +32,16 @@ public final class JsonReader {
         }
     }
 
-    public static CrossoverType getCrossOverType() {
+    public static CrossOver getCrossOverProperties() {
         try {
-            return getConfig().getEnum(CrossoverType.class,CROSSOVER.getProperty());
+            JSONObject jsonObject = getConfig().getJSONObject(CROSSOVER.getProperty());
+            return new CrossOver
+                    .CrossOverBuilder()
+                    .crossoverType(jsonObject.getEnum(CrossoverType.class, CROSSOVERTYPE.getProperty()))
+                    .probability(jsonObject.getDouble(PROBABILITY.getProperty()))
+                    .build();
         } catch (IOException e) {
-            throw new InvalidTypeException("Invalid crossover strategy in the configuration");
+            throw new InvalidTypeException("Incorrect data in the CrossOver in the configuration");
         }
     }
 

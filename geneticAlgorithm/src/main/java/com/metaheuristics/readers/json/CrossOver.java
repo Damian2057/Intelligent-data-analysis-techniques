@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class Mutation {
-    private boolean isEnable;
+public class CrossOver {
+    private CrossoverType crossoverType;
     private double probability;
 }
