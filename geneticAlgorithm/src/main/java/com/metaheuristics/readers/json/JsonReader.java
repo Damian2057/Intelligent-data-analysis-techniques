@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class JsonReader {
+public final class JsonReader {
 
     public static Mutation getMutationProperties() throws IOException {
         JSONObject jsonObject = getConfig().getJSONObject("mutation");
@@ -24,6 +24,10 @@ public class JsonReader {
 
     public static CrossoverType getCrossOverType() throws IOException {
         return getConfig().getEnum(CrossoverType.class,"crossoverType");
+    }
+
+    public static int getBackpackCapacity() throws IOException {
+        return getConfig().getInt("backpackCapacity");
     }
 
     private static JSONObject getConfig() throws IOException {
