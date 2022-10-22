@@ -27,10 +27,16 @@ public interface Genetic {
     List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents);
 
     /**
-     * Ranking Selection
+     * Tournament Selection
      * @param generation whole generation
      * @param numberOfParents number Of Parents
      * @return list of selected parents
      */
-    List<Specimen> rankingSelection(List<Specimen> generation, int numberOfParents);
+    List<Specimen> tournamentSelection(List<Specimen> generation, int numberOfParents);
+
+    /**
+     * @param parents selected representatives of the species
+     * @param populationSize number of Specimen to be produced
+     */
+    List<Specimen> crossOver(List<Specimen> parents, int populationSize);
 }

@@ -2,8 +2,7 @@ package com.metaheuristics.readers.json;
 
 public enum SelectionType {
     ROULETTE("Roulette"),
-    RANKING("Ranking");
-
+    TOURNAMENT("Tournament");
     private final String ranking;
     SelectionType(String ranking) {
         this.ranking = ranking;
