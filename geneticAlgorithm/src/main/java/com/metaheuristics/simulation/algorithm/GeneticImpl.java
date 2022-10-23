@@ -215,7 +215,7 @@ public class GeneticImpl implements Genetic {
     }
 
     private void mutationChance(List<Specimen> newGeneration) {
-        if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability()) {
+        if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability() && mutation.isEnable()) {
             logger.info("The gene has mutated");
             Random rand = new Random();
             newGeneration.get(rand.nextInt(newGeneration.size())).reverseSingleGen(random(1));
