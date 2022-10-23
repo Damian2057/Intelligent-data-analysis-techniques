@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.function.Function;
 
 @Setter
+@Getter
 public class Specimen implements Comparable<Specimen>, Cloneable {
 
     private List<Integer> gens;
     private double adaptation = 0.0;
     private boolean isCorrect = true;
     private double probabilityOfChoice = 0.8;
+    int epoch = 0;
 
     public Specimen(List<Integer> gens) {
         this.gens = gens;
@@ -69,5 +71,7 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
     }
 
 
-
+    public void addEpoch() {
+        epoch++;
+    }
 }

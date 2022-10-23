@@ -41,7 +41,7 @@ public class SpecimenFactory {
         int max = 0;
         for (int i = 0; i < chromosomeSize; i++) {
             int value = random();
-            if(value == 1 && max < 12) {
+            if(value == 1 && max < 3) {
                 chromosome.add(1);
                 max++;
             } else {
