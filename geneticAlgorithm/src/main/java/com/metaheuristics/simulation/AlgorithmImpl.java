@@ -69,4 +69,5 @@ public class AlgorithmImpl implements Algorithm {
     public List<Specimen> getGeneration() {
         return generation;
     }
+
 }
