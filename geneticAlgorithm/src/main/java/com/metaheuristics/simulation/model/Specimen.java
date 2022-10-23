@@ -67,4 +67,7 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
                 ", probabilityOfChoice=" + probabilityOfChoice +
                 '}';
     }
+
+
+
 }
