@@ -11,7 +11,6 @@ import org.jfree.chart.ui.ApplicationFrame;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

@@ -2,8 +2,6 @@ package com.metaheuristics.simulation;
 
 import com.metaheuristics.chart.ChartGenerator;
 import com.metaheuristics.chart.DataSet;
-import com.metaheuristics.readers.fileoperation.FileOperation;
-import com.metaheuristics.readers.fileoperation.FileOperationImpl;
 import com.metaheuristics.readers.json.JsonReader;
 import com.metaheuristics.readers.json.SelectionType;
 import com.metaheuristics.simulation.algorithm.Genetic;
@@ -24,7 +22,6 @@ public class AlgorithmImpl implements Algorithm {
     private final static SelectionType selectionType = JsonReader.getSelectionType();
     private final static int numberOfIterations = JsonReader.getNumberOfIterations();
     private final static int numberOfParents = JsonReader.getNumberOfParents();
-    private static final int populationSize = JsonReader.getPopulationSize();
     private static final int display = JsonReader.getDisplay();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
     //private static final FileOperation fileOperation = new FileOperationImpl();
