@@ -1,7 +1,7 @@
 {
   "mutation": {
     "isEnable": true,
-    "probability": 0.01
+    "probability": 0.05
   },
   "crossOver": {
     "crossoverType": "DOUBLEPOINT",
@@ -9,9 +9,9 @@
   },
   "selectionType": "TOURNAMENT",
   "backpackCapacity": 6404180,
-  "populationSize": 40000,
-  "numberOfIterations": 200,
-  "numberOfParents": 1000,
+  "populationSize": 4000,
+  "numberOfIterations": 1000,
+  "numberOfParents": 2000,
 
-  "display": 20
+  "display": 400
 }

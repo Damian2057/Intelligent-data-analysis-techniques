@@ -36,9 +36,8 @@ public interface Genetic {
 
     /**
      * @param parents selected representatives of the species
-     * @param populationSize number of Specimen to be produced
      */
-    List<Specimen> crossGenes(List<Specimen> parents, int populationSize);
+    List<Specimen> crossGenes(List<Specimen> parents);
 
     /**
      * @param generation whole generation
@@ -51,4 +50,13 @@ public interface Genetic {
      * @return verbal interpretation of the items
      */
     String interpretThings(List<Integer> chromosome);
+
+    /**
+     *
+     * @param generation actual generation
+     * @param parents parents
+     * @param kids kids
+     * @return new generation
+     */
+    List<Specimen> createNewGeneration(List<Specimen> generation, List<Specimen> parents, List<Specimen> kids);
 }

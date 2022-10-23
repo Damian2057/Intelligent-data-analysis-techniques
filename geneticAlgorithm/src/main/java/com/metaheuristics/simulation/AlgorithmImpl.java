@@ -1,5 +1,7 @@
 package com.metaheuristics.simulation;
 
+import com.metaheuristics.readers.fileoperation.FileOperation;
+import com.metaheuristics.readers.fileoperation.FileOperationImpl;
 import com.metaheuristics.readers.json.JsonReader;
 import com.metaheuristics.readers.json.SelectionType;
 import com.metaheuristics.simulation.algorithm.Genetic;
@@ -23,6 +25,7 @@ public class AlgorithmImpl implements Algorithm {
     private static final int populationSize = JsonReader.getPopulationSize();
     private static final int display = JsonReader.getDisplay();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
+    private static final FileOperation fileOperation = new FileOperationImpl();
     private List<Specimen> generation;
     private Specimen bestSample;
     private final Logger logger = Logger.getLogger(Algorithm.class.getSimpleName());
@@ -53,10 +56,12 @@ public class AlgorithmImpl implements Algorithm {
                     genetic.rouletteSelection(generation, numberOfParents)
                     : genetic.tournamentSelection(generation, numberOfParents);
             //crossing genes
-            this.generation = genetic.crossGenes(parents, populationSize);
+            List<Specimen> kids = genetic.crossGenes(parents);
+            this.generation = genetic.createNewGeneration(generation, parents, kids);
             //calculate adaptation for a whole generation
             genetic.adaptationFunction(generation);
             bestSample = fineTheBest.apply(genetic.getTheBestSpecimen(generation));
+            fileOperation.writeData(i,generation);
         }
 
         logger.info("The simulation is over, the result is a backpack:\n"
@@ -69,4 +74,5 @@ public class AlgorithmImpl implements Algorithm {
     public List<Specimen> getGeneration() {
         return generation;
     }
+
 }
