@@ -39,4 +39,16 @@ public interface Genetic {
      * @param populationSize number of Specimen to be produced
      */
     List<Specimen> crossGenes(List<Specimen> parents, int populationSize);
+
+    /**
+     * @param generation whole generation
+     * @return the best Specimen among the whole species
+     */
+    Specimen getTheBestSpecimen(List<Specimen> generation);
+
+    /**
+     * @param chromosome a list showing whether the item is present or not
+     * @return verbal interpretation of the items
+     */
+    String interpretThings(List<Integer> chromosome);
 }

@@ -8,6 +8,7 @@ import com.metaheuristics.readers.json.JsonReader;
 import com.metaheuristics.readers.json.Mutation;
 import com.metaheuristics.simulation.model.Specimen;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -17,6 +18,7 @@ public class GeneticImpl implements Genetic {
 
     private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
     private final static Mutation mutation = JsonReader.getMutationProperties();
+    private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
     private final Logger logger = Logger.getLogger(Genetic.class.getSimpleName());
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
@@ -51,7 +53,7 @@ public class GeneticImpl implements Genetic {
                 specimen.setAdaptation(adaptation);
                 specimen.setCorrect(true);
                 if(lock) {
-                    logger.info("Adaptation started with value: " + adaptation);
+                    logger.info("Adaptation started with value: " + decimalFormat.format(adaptation));
                     lock = false;
                 }
             }
@@ -62,6 +64,7 @@ public class GeneticImpl implements Genetic {
     public List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents) {
         List<Specimen> selected = new ArrayList<>();
         setProbabilityInPopulation(generation);
+        //TODO: complete
         return selected;
     }
 
@@ -123,10 +126,33 @@ public class GeneticImpl implements Genetic {
     @Override
     public List<Specimen> crossGenes(List<Specimen> parents, int populationSize) {
         return crossOver.getCrossoverType() == CrossoverType.ONEPOINT
-                ? onePointCross(parents, populationSize) : doublePointCross(parents, populationSize);
+                ? onePointGenCross(parents, populationSize) : doublePointGenCross(parents, populationSize);
     }
 
-    private List<Specimen> onePointCross(List<Specimen> parents, int populationSize) {
+    @Override
+    public Specimen getTheBestSpecimen(List<Specimen> generation) {
+        List<Specimen> copy = new ArrayList<>(generation);
+        Collections.sort(copy);
+        return copy.get(0);
+    }
+
+    @Override
+    public String interpretThings(List<Integer> chromosome) {
+        StringBuilder builder = new StringBuilder();
+        int index = 0;
+        for (int gen : chromosome) {
+            if(gen == 1) {
+                builder.append(bagPackItems.get(index).getId())
+                        .append(". ")
+                        .append(bagPackItems.get(index).getName())
+                        .append("\n");
+            }
+            index++;
+        }
+        return builder.toString();
+    }
+
+    private List<Specimen> onePointGenCross(List<Specimen> parents, int populationSize) {
         List<Specimen> newGeneration = new ArrayList<>();
         for (int i = 0; i < populationSize / 2; i++) {
             List<Specimen> selectedParents = getRandomParents(parents);
@@ -196,7 +222,7 @@ public class GeneticImpl implements Genetic {
         }
     }
 
-    private List<Specimen> doublePointCross(List<Specimen> parents, int populationSize) {
+    private List<Specimen> doublePointGenCross(List<Specimen> parents, int populationSize) {
         List<Specimen> newGeneration = new ArrayList<>();
         for (int i = 0; i < populationSize / 2; i++) {
             List<Specimen> selectedParents = getRandomParents(parents);
