@@ -1,6 +1,5 @@
 package com.metaheuristics;
 
-
 import com.metaheuristics.simulation.Algorithm;
 import com.metaheuristics.simulation.AlgorithmImpl;
 
@@ -10,4 +9,5 @@ public class MainApp {
         Algorithm algorithm = new AlgorithmImpl();
         algorithm.startSimulation();
     }
+
 }

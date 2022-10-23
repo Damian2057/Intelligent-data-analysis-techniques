@@ -2,12 +2,12 @@ package com.metaheuristics.simulation.model;
 
 import lombok.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-@ToString
 @Setter
 public class Specimen implements Comparable<Specimen>, Cloneable {
 
@@ -58,4 +58,13 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Specimen{" +
+                "gens=" + gens +
+                ", adaptation=" + new DecimalFormat("########.#").format(adaptation) +
+                ", isCorrect=" + isCorrect +
+                ", probabilityOfChoice=" + probabilityOfChoice +
+                '}';
+    }
 }
