@@ -1,5 +1,7 @@
 package com.metaheuristics.simulation;
 
+import com.metaheuristics.chart.ChartGenerator;
+import com.metaheuristics.chart.DataSet;
 import com.metaheuristics.readers.fileoperation.FileOperation;
 import com.metaheuristics.readers.fileoperation.FileOperationImpl;
 import com.metaheuristics.readers.json.JsonReader;
@@ -25,7 +27,7 @@ public class AlgorithmImpl implements Algorithm {
     private static final int populationSize = JsonReader.getPopulationSize();
     private static final int display = JsonReader.getDisplay();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
-    private static final FileOperation fileOperation = new FileOperationImpl();
+    //private static final FileOperation fileOperation = new FileOperationImpl();
     private List<Specimen> generation;
     private Specimen bestSample;
     private final Logger logger = Logger.getLogger(Algorithm.class.getSimpleName());
@@ -45,11 +47,14 @@ public class AlgorithmImpl implements Algorithm {
 
     @Override
     public void startSimulation() {
+        List<DataSet> dataSets = new ArrayList<>();
         logger.info("The simulation has started");
         for (int i = 0; i < numberOfIterations; i++) {
             if(i % display == 0) {
                 logger.info("Round of simulation number: " + i);
                 logger.info("Current the best adaptation: " + decimalFormat.format(bestSample.getAdaptation()));
+                //fileOperation.writeData(i,generation);
+                dataSets.add(new DataSet(i,generation));
             }
             //parents' choice
             List<Specimen> parents = selectionType == SelectionType.ROULETTE ?
@@ -61,13 +66,15 @@ public class AlgorithmImpl implements Algorithm {
             //calculate adaptation for a whole generation
             genetic.adaptationFunction(generation);
             bestSample = fineTheBest.apply(genetic.getTheBestSpecimen(generation));
-            fileOperation.writeData(i,generation);
         }
 
         logger.info("The simulation is over, the result is a backpack:\n"
                 + bestSample.toString()
                 + "\nContents: \n"
                 + genetic.interpretThings(bestSample.getGens()));
+        ChartGenerator chartGenerator = new ChartGenerator(dataSets);
+        chartGenerator.pack();
+        chartGenerator.setVisible(true);
     }
 
     @Override

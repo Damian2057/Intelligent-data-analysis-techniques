@@ -216,8 +216,9 @@ public class GeneticImpl implements Genetic {
             chromosome.addAll(getRange(parent1, 0, barrier));
             chromosome.addAll(getRange(parent2, barrier, 26));
         }
-
-        return new Specimen(chromosome);
+        Specimen specimen = new Specimen(chromosome);
+        specimen.addEpoch();
+        return specimen;
     }
 
     private List<Integer> getRange(List<Integer> list, int start, int end) {
@@ -235,7 +236,6 @@ public class GeneticImpl implements Genetic {
 
     private void mutationChance(List<Specimen> newGeneration) {
         if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability() && mutation.isEnable()) {
-            logger.info("The gene has mutated");
             Random rand = new Random();
             newGeneration.get(rand.nextInt(newGeneration.size())).reverseSingleGen(random(1));
         }
@@ -276,7 +276,8 @@ public class GeneticImpl implements Genetic {
             chromosome.addAll(getRange(parent1, barrier1, barrier2));
             chromosome.addAll(getRange(parent2, barrier2, 26));
         }
-
+        Specimen specimen = new Specimen(chromosome);
+        specimen.addEpoch();
         return new Specimen(chromosome);
     }
 
