@@ -15,7 +15,6 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
     private List<Integer> gens;
     private double adaptation = 0.0;
     private boolean isCorrect = true;
-    private double probabilityOfChoice = 0.8;
     int epoch = 0;
 
     public Specimen(List<Integer> gens) {
@@ -37,10 +36,6 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
 
     public boolean isCorrect() {
         return isCorrect;
-    }
-
-    public double getProbabilityOfChoice() {
-        return probabilityOfChoice;
     }
 
     public void reverseSingleGen(int index) {
@@ -66,7 +61,6 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
                 "gens=" + gens +
                 ", adaptation=" + new DecimalFormat("########.#").format(adaptation) +
                 ", isCorrect=" + isCorrect +
-                ", probabilityOfChoice=" + probabilityOfChoice +
                 '}';
     }
 

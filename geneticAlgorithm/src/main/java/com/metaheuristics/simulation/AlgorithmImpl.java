@@ -55,8 +55,8 @@ public class AlgorithmImpl implements Algorithm {
             }
             //parents' choice
             List<Specimen> parents = selectionType == SelectionType.ROULETTE ?
-                    genetic.rouletteSelection(generation, numberOfParents)
-                    : genetic.tournamentSelection(generation, numberOfParents);
+                    genetic.rouletteSelection(generation)
+                    : genetic.tournamentSelection(generation);
             //crossing genes
             List<Specimen> kids = genetic.crossGenes(parents);
             this.generation = genetic.createNewGeneration(generation, parents, kids);
