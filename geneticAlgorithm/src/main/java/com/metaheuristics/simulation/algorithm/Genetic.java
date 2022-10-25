@@ -7,12 +7,6 @@ import java.util.List;
 public interface Genetic {
 
     /**
-     * @param specimen single specimen
-     * @return the value of an individual's adaptation
-     */
-    double adaptationFunction(Specimen specimen);
-
-    /**
      * calculate adaptation for a whole generation
      * @param generation whole generation
      */

@@ -31,8 +31,7 @@ public class GeneticImpl implements Genetic {
         logger.info("Adaptation default value for min: " + adaptationDefaultValue);
     }
 
-    @Override
-    public double adaptationFunction(Specimen specimen) {
+    private double adaptationFunction(Specimen specimen) {
         int weight = 0;
         int price = 0;
         int index = 0;
@@ -86,19 +85,16 @@ public class GeneticImpl implements Genetic {
         List<Specimen> copyOfList = new ArrayList<>(generation);
         List<Specimen> selected = new ArrayList<>();
         double sum = getAdaptationSum(copyOfList);
-        double size = copyOfList.size();
 
         for (Specimen specimen : copyOfList) {
             if(specimen.getAdaptation() == 0) {
                 selected.addAll(Collections
                         .nCopies(adaptationDefaultValue, specimen));
             } else {
-                int calc = (int) (size * specimen.getAdaptation() / sum * 100);
                 selected.addAll(Collections
-                        .nCopies(calc, specimen));
+                        .nCopies((int) (populationSize * specimen.getAdaptation() / sum * 100), specimen));
             }
         }
-
         Collections.shuffle(selected);
 
         return selected;

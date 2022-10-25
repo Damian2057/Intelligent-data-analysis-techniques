@@ -21,10 +21,8 @@ public class AlgorithmImpl implements Algorithm {
     private final static SpecimenFactory factory = new SpecimenFactory();
     private final static SelectionType selectionType = JsonReader.getSelectionType();
     private final static int numberOfIterations = JsonReader.getNumberOfIterations();
-    private final static int numberOfParents = JsonReader.getNumberOfParents();
     private static final int display = JsonReader.getDisplay();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
-    //private static final FileOperation fileOperation = new FileOperationImpl();
     private List<Specimen> generation;
     private Specimen bestSample;
     private final Logger logger = Logger.getLogger(Algorithm.class.getSimpleName());
