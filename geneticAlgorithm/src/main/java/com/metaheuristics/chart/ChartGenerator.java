@@ -8,11 +8,14 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.ui.ApplicationFrame;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class ChartGenerator extends ApplicationFrame {
 
@@ -48,7 +51,6 @@ public class ChartGenerator extends ApplicationFrame {
         XYPlot plot = (XYPlot) chart.getPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-//        renderer.setSeriesLinesVisible(0, true);
         renderer.setSeriesShapesVisible(0, false);
 
         renderer.setSeriesLinesVisible(1, false);
@@ -68,6 +70,59 @@ public class ChartGenerator extends ApplicationFrame {
             sum += spec.getAdaptation();
         }
         return sum / specimen.size();
+    }
+
+    public ChartGenerator(List<DataSet> dataSets, int x) {
+        super( "Chart: ");
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Chart",
+                "Epoch",
+                "",
+                createDataset(dataSets),
+                PlotOrientation.VERTICAL,
+                true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension( 560 , 367 ) );
+        setContentPane( chartPanel );
+    }
+
+    private CategoryDataset createDataset(List<DataSet> dataSets) {
+
+        final DefaultCategoryDataset dataset =
+                new DefaultCategoryDataset( );
+
+        for (DataSet data: dataSets) {
+            dataset.addValue(getValue(data.getList(), "min"),"min", String.valueOf(data.getRound()));
+            dataset.addValue(getValue(data.getList(), "max"), "max", String.valueOf(data.getRound()));
+            dataset.addValue(getValue(data.getList(), "avg"), "avg", String.valueOf(data.getRound()));
+        }
+
+        return dataset;
+    }
+
+    private int getValue(List<Specimen> list, String key) {
+        int min = 0;
+        int max = 0;
+        int avgI = 0;
+        double avg = getAvg(list);
+        for (Specimen spec : list) {
+            if(spec.getAdaptation() > avg) {
+                max++;
+            } else if(spec.getAdaptation() < avg) {
+                min++;
+            } else {
+                avgI++;
+            }
+        }
+
+        if(Objects.equals(key, "min")) {
+            return min;
+        } else if(Objects.equals(key, "max")) {
+            return max;
+        } else {
+            return avgI;
+        }
     }
 
 }

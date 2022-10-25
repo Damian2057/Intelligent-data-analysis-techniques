@@ -7,11 +7,11 @@
     "crossoverType": "DOUBLEPOINT",
     "probability": 0.9
   },
-  "selectionType": "ROULETTE",
+  "selectionType": "TOURNAMENT",
   "backpackCapacity": 6404180,
-  "populationSize": 4000,
+  "populationSize": 40000,
   "numberOfIterations": 1500,
-  "numberOfParents": 120,
+  "numberOfParents": 2000,
 
   "display": 10
 }

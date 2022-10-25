@@ -194,7 +194,7 @@ public class GeneticImpl implements Genetic {
         List<Specimen> copyOfList = new ArrayList<>(generation);
         copyOfList.removeAll(parents);
         Collections.sort(copyOfList);
-        killSpecimen(copyOfList, kids.size());
+        killSpecimen(copyOfList, kids.size() + (copyOfList.size() - (generation.size() - parents.size())));
         copyOfList.addAll(kids);
         copyOfList.addAll(parents);
 
