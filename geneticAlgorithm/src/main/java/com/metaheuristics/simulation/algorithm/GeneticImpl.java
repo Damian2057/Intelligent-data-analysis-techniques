@@ -10,7 +10,6 @@ import com.metaheuristics.simulation.model.Specimen;
 
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -20,10 +19,17 @@ public class GeneticImpl implements Genetic {
     private final static Mutation mutation = JsonReader.getMutationProperties();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
     private final Logger logger = Logger.getLogger(Genetic.class.getSimpleName());
+    private final int populationSize = JsonReader.getPopulationSize();
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
+    private final int numberOfParents = JsonReader.getNumberOfParents();
+    private final int adaptationDefaultValue = (int) getAdaptationDefaultValue(populationSize);
     private final Function<Specimen, Double> function = Specimen::getAdaptation;
     private boolean lock = true;
+
+    public GeneticImpl() {
+        logger.info("Adaptation default value for min: " + adaptationDefaultValue);
+    }
 
     @Override
     public double adaptationFunction(Specimen specimen) {
@@ -39,7 +45,7 @@ public class GeneticImpl implements Genetic {
         }
         if(weight > backpackCapacity) {
             return 0.0;
-        }
+    }
         return price;
     }
 
@@ -61,19 +67,41 @@ public class GeneticImpl implements Genetic {
     }
 
     @Override
-    public List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents) {
+    public List<Specimen> rouletteSelection(List<Specimen> generation) {
         List<Specimen> selected = new ArrayList<>();
-        setProbabilityInPopulation(generation);
-        //TODO: complete
+        List<Specimen> roulette = prepareRoulette(generation);
+        Random rand = new Random();
+
+        for (int i = 0; i < numberOfParents; i++) {
+            int randomIndex = rand.nextInt(roulette.size());
+            Specimen randomElement = roulette.get(randomIndex);
+            roulette.remove(randomIndex);
+            selected.add(randomElement);
+        }
+
         return selected;
     }
 
-    private void setProbabilityInPopulation(List<Specimen> generation) {
-        double adaptationSum = getAdaptationSum(generation);
-        Consumer<Specimen> consumer = x -> x.setProbabilityOfChoice(x.getAdaptation()/adaptationSum);
-        for (Specimen specimen : generation) {
-            consumer.accept(specimen);
+    private List<Specimen> prepareRoulette(List<Specimen> generation) {
+        List<Specimen> copyOfList = new ArrayList<>(generation);
+        List<Specimen> selected = new ArrayList<>();
+        double sum = getAdaptationSum(copyOfList);
+        double size = copyOfList.size();
+
+        for (Specimen specimen : copyOfList) {
+            if(specimen.getAdaptation() == 0) {
+                selected.addAll(Collections
+                        .nCopies(adaptationDefaultValue, specimen));
+            } else {
+                int calc = (int) (size * specimen.getAdaptation() / sum * 100);
+                selected.addAll(Collections
+                        .nCopies(calc, specimen));
+            }
         }
+
+        Collections.shuffle(selected);
+
+        return selected;
     }
 
     private double getAdaptationSum(List<Specimen> generation) {
@@ -84,8 +112,20 @@ public class GeneticImpl implements Genetic {
         return adaptationSum;
     }
 
+    private double getAdaptationDefaultValue(int size) {
+        if(size < 10) {
+            return 1;
+        } else {
+            double value = size;
+            for (int i = 1; i < size; i*=10) {
+                value = value / i;
+            }
+            return size * value;
+        }
+    }
+
     @Override
-    public List<Specimen> tournamentSelection(List<Specimen> generation, int numberOfParents) {
+    public List<Specimen> tournamentSelection(List<Specimen> generation) {
         List<Specimen> selected = new ArrayList<>();
         List<Specimen> copyOfList = new ArrayList<>(generation);
         List<List<Specimen>> tournamentGroups = new ArrayList<>();

@@ -21,18 +21,16 @@ public interface Genetic {
     /**
      * Roulette Selection
      * @param generation whole generation
-     * @param numberOfParents number Of Parents
      * @return list of selected parents
      */
-    List<Specimen> rouletteSelection(List<Specimen> generation, int numberOfParents);
+    List<Specimen> rouletteSelection(List<Specimen> generation);
 
     /**
      * Tournament Selection
      * @param generation whole generation
-     * @param numberOfParents number Of Parents
      * @return list of selected parents
      */
-    List<Specimen> tournamentSelection(List<Specimen> generation, int numberOfParents);
+    List<Specimen> tournamentSelection(List<Specimen> generation);
 
     /**
      * @param parents selected representatives of the species
@@ -52,7 +50,6 @@ public interface Genetic {
     String interpretThings(List<Integer> chromosome);
 
     /**
-     *
      * @param generation actual generation
      * @param parents parents
      * @param kids kids
