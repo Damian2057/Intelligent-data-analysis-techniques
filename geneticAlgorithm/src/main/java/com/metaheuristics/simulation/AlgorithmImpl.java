@@ -70,6 +70,10 @@ public class AlgorithmImpl implements Algorithm {
         ChartGenerator chartGenerator = new ChartGenerator(dataSets);
         chartGenerator.pack();
         chartGenerator.setVisible(true);
+
+        ChartGenerator chartGenerator1 = new ChartGenerator(dataSets, 1);
+        chartGenerator1.pack();
+        chartGenerator1.setVisible(true);
     }
 
     @Override

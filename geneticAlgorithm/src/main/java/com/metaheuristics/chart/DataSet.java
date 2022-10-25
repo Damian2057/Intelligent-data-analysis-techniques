@@ -11,6 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class DataSet {
-    int round;
-    List<Specimen> list;
+    private int round;
+    private List<Specimen> list;
 }

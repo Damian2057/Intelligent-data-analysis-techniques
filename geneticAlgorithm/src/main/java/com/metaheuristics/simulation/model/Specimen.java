@@ -64,7 +64,6 @@ public class Specimen implements Comparable<Specimen>, Cloneable {
                 '}';
     }
 
-
     public void addEpoch() {
         epoch++;
     }
