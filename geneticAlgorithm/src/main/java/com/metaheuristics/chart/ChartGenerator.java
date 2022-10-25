@@ -51,7 +51,6 @@ public class ChartGenerator extends ApplicationFrame {
         XYPlot plot = (XYPlot) chart.getPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-//        renderer.setSeriesLinesVisible(0, true);
         renderer.setSeriesShapesVisible(0, false);
 
         renderer.setSeriesLinesVisible(1, false);
