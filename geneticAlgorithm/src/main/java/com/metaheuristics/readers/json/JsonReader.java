@@ -70,6 +70,7 @@ public final class JsonReader {
         }
     }
 
+    @Deprecated
     public static int getNumberOfParents() {
         try {
             return getConfig().getInt(PARENTS.getProperty());
@@ -83,6 +84,14 @@ public final class JsonReader {
             return getConfig().getInt(DISPLAY.getProperty());
         } catch (IOException | JSONException e) {
             throw new InvalidTypeException("Incorrect data in the population size configuration");
+        }
+    }
+
+    public static int getProgramStartTimes() {
+        try {
+            return getConfig().getInt(STARTS.getProperty());
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Incorrect data in the start times configuration");
         }
     }
 

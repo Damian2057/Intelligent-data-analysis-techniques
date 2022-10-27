@@ -19,9 +19,9 @@ import java.util.Objects;
 
 public class ChartGenerator extends ApplicationFrame {
 
-    public ChartGenerator(List<DataSet> dataSets) {
+    public ChartGenerator(List<DataSet> dataSets, String title) {
 
-        super("Chart: ");
+        super("Chart: "+ title);
 
         final XYSeries originSeries = new XYSeries("f(x)");
         final XYSeries maxSeries = new XYSeries("fmax(x)");
@@ -38,7 +38,7 @@ public class ChartGenerator extends ApplicationFrame {
         data.addSeries(minSeries);
 
         final JFreeChart chart = ChartFactory.createXYLineChart(
-                "Chart: ",
+                "Chart: "+ title,
                 "Epochs",
                 "adaptation",
                 data,
@@ -72,10 +72,10 @@ public class ChartGenerator extends ApplicationFrame {
         return sum / specimen.size();
     }
 
-    public ChartGenerator(List<DataSet> dataSets, int x) {
-        super( "Chart: ");
+    public ChartGenerator(List<DataSet> dataSets, String title,  int x) {
+        super( "Chart: " + title);
         JFreeChart barChart = ChartFactory.createBarChart(
-                "Chart",
+                "Chart: " + title,
                 "Epoch",
                 "",
                 createDataset(dataSets),
