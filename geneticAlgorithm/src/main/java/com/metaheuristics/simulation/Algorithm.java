@@ -4,12 +4,7 @@ import com.metaheuristics.simulation.model.Specimen;
 
 import java.util.List;
 
-public interface Algorithm {
-
-    /**
-     * evolutionary loop
-     */
-    void startSimulation();
+public interface Algorithm extends Runnable{
 
     /**
      * @return current generation

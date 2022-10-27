@@ -1,16 +1,17 @@
 {
   "mutation": {
     "isEnable": true,
-    "probability": 0.01
+    "probability": 0.001
   },
   "crossOver": {
     "crossoverType": "DOUBLEPOINT",
-    "probability": 0.3
+    "probability": 0.6
   },
   "selectionType": "ROULETTE",
   "backpackCapacity": 6404180,
-  "populationSize": 2000,
-  "numberOfIterations": 100,
+  "populationSize": 8000,
+  "numberOfIterations": 150,
 
-  "display": 1
+  "display": 1,
+  "startTimes": 5
 }

@@ -87,6 +87,14 @@ public final class JsonReader {
         }
     }
 
+    public static int getProgramStartTimes() {
+        try {
+            return getConfig().getInt(STARTS.getProperty());
+        } catch (IOException | JSONException e) {
+            throw new InvalidTypeException("Incorrect data in the start times configuration");
+        }
+    }
+
     private static JSONObject getConfig() throws IOException {
         Path filePath = Path.of(CONFIG.getProperty());
         String jsonString = Files.readString(filePath);

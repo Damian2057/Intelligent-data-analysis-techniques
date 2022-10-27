@@ -41,7 +41,12 @@ public class AlgorithmImpl implements Algorithm {
     }
 
     @Override
-    public void startSimulation() {
+    public List<Specimen> getGeneration() {
+        return generation;
+    }
+
+    @Override
+    public void run() {
         List<DataSet> dataSets = new ArrayList<>();
         logger.info("The simulation has started");
         for (int i = 0; i < numberOfIterations; i++) {
@@ -67,18 +72,12 @@ public class AlgorithmImpl implements Algorithm {
                 + bestSample.toString()
                 + "\nContents: \n"
                 + genetic.interpretThings(bestSample.getGens()));
-        ChartGenerator chartGenerator = new ChartGenerator(dataSets);
+        ChartGenerator chartGenerator = new ChartGenerator(dataSets, decimalFormat.format(bestSample.getAdaptation()));
         chartGenerator.pack();
         chartGenerator.setVisible(true);
 
-        ChartGenerator chartGenerator1 = new ChartGenerator(dataSets, 1);
+        ChartGenerator chartGenerator1 = new ChartGenerator(dataSets, decimalFormat.format(bestSample.getAdaptation()), 1);
         chartGenerator1.pack();
         chartGenerator1.setVisible(true);
     }
-
-    @Override
-    public List<Specimen> getGeneration() {
-        return generation;
-    }
-
 }

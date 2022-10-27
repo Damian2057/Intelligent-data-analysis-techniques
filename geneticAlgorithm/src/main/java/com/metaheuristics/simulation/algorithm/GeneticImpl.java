@@ -18,18 +18,20 @@ public class GeneticImpl implements Genetic {
     private final static CrossOver crossOver = JsonReader.getCrossOverProperties();
     private final static Mutation mutation = JsonReader.getMutationProperties();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
+    private static final int populationSize = JsonReader.getPopulationSize();
+    private static final int numberOfMutations = (int) (populationSize * mutation.getProbability());
     private final Logger logger = Logger.getLogger(Genetic.class.getSimpleName());
-    private final int populationSize = JsonReader.getPopulationSize();
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
     private final int numberOfParents = (int) (JsonReader.getPopulationSize() * crossOver.getProbability());
-    private final int adaptationDefaultValue = (int) getAdaptationDefaultValue(populationSize);
+    private final int adaptationDefaultValue = (int) getAdaptationDefaultValue();
     private final Function<Specimen, Double> function = Specimen::getAdaptation;
     private boolean lock = true;
 
     public GeneticImpl() {
-        logger.info("Adaptation default value for min: " + adaptationDefaultValue);
-        logger.info("The number of Specimen taken to create a generation: " + numberOfParents);
+        logger.info("Adaptation default value for min: " + adaptationDefaultValue
+                + "\nThe number of Specimen taken to create a generation: " + numberOfParents
+                + "\nNumber of mutating: " + numberOfMutations);
     }
 
     private double adaptationFunction(Specimen specimen) {
@@ -109,15 +111,15 @@ public class GeneticImpl implements Genetic {
         return adaptationSum;
     }
 
-    private double getAdaptationDefaultValue(int size) {
-        if(size < 10) {
+    private double getAdaptationDefaultValue() {
+        if(GeneticImpl.populationSize < 10) {
             return 1;
         } else {
-            double value = size;
-            for (int i = 1; i < size; i*=10) {
+            double value = GeneticImpl.populationSize;
+            for (int i = 1; i < GeneticImpl.populationSize; i*=10) {
                 value = value / i;
             }
-            return size * value;
+            return GeneticImpl.populationSize * value;
         }
     }
 
@@ -145,6 +147,8 @@ public class GeneticImpl implements Genetic {
             Collections.sort(specimenList);
             selected.add(specimenList.get(0));
         }
+        Collections.shuffle(selected);
+
         return selected;
     }
 
@@ -198,6 +202,7 @@ public class GeneticImpl implements Genetic {
         killSpecimen(copyOfList, copyOfList.size() - kids.size());
         copyOfList.addAll(kids);
         copyOfList.addAll(parents);
+        Collections.shuffle(copyOfList);
 
         return copyOfList;
     }
@@ -272,10 +277,16 @@ public class GeneticImpl implements Genetic {
     }
 
     private void mutationChance(List<Specimen> newGeneration) {
-        if((0.0 + (1) * new Random().nextDouble()) < mutation.getProbability() && mutation.isEnable()) {
-            Random rand = new Random();
-            newGeneration.get(rand.nextInt(newGeneration.size())).reverseSingleGen(random(1));
+        Random rand = new Random();
+        List<Specimen> mutated = new ArrayList<>();
+        for (int i = 0; i < numberOfMutations; i++) {
+            int randomIndex = rand.nextInt(newGeneration.size());
+            Specimen randomElement = newGeneration.get(randomIndex);
+            newGeneration.remove(randomIndex);
+            randomElement.reverseSingleGen(random(1));
+            mutated.add(randomElement);
         }
+        newGeneration.addAll(mutated);
     }
 
     private List<Specimen> doublePointGenCross(List<Specimen> parents) {

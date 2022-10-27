@@ -14,7 +14,8 @@ public enum Const {
     ITEMS("src/main/resources/objects.csv"),
     ITERATIONS("numberOfIterations"),
     PARENTS("numberOfParents"),
-    DISPLAY("display");
+    DISPLAY("display"),
+    STARTS("startTimes");
 
 
     private final String property;
