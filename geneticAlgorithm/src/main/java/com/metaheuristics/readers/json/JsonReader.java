@@ -70,6 +70,7 @@ public final class JsonReader {
         }
     }
 
+    @Deprecated
     public static int getNumberOfParents() {
         try {
             return getConfig().getInt(PARENTS.getProperty());

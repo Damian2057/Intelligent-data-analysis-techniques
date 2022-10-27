@@ -47,7 +47,7 @@ public class AlgorithmImpl implements Algorithm {
         for (int i = 0; i < numberOfIterations; i++) {
             if(i % display == 0) {
                 logger.info("Round of simulation number: " + i);
-                logger.info("Current the best adaptation: " + decimalFormat.format(bestSample.getAdaptation()));
+                logger.info("Current best adaptation: " + decimalFormat.format(bestSample.getAdaptation()));
                 //fileOperation.writeData(i,generation);
                 dataSets.add(new DataSet(i,generation));
             }

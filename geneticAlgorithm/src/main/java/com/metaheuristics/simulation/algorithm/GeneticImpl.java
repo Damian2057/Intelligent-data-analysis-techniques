@@ -22,13 +22,14 @@ public class GeneticImpl implements Genetic {
     private final int populationSize = JsonReader.getPopulationSize();
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
-    private final int numberOfParents = JsonReader.getNumberOfParents();
+    private final int numberOfParents = (int) (JsonReader.getPopulationSize() * crossOver.getProbability());
     private final int adaptationDefaultValue = (int) getAdaptationDefaultValue(populationSize);
     private final Function<Specimen, Double> function = Specimen::getAdaptation;
     private boolean lock = true;
 
     public GeneticImpl() {
         logger.info("Adaptation default value for min: " + adaptationDefaultValue);
+        logger.info("The number of Specimen taken to create a generation: " + numberOfParents);
     }
 
     private double adaptationFunction(Specimen specimen) {
@@ -194,7 +195,7 @@ public class GeneticImpl implements Genetic {
         List<Specimen> copyOfList = new ArrayList<>(generation);
         copyOfList.removeAll(parents);
         Collections.sort(copyOfList);
-        killSpecimen(copyOfList, kids.size() + (copyOfList.size() - (generation.size() - parents.size())));
+        killSpecimen(copyOfList, copyOfList.size() - kids.size());
         copyOfList.addAll(kids);
         copyOfList.addAll(parents);
 
