@@ -47,7 +47,7 @@ public class GeneticImpl implements Genetic {
         }
         if(weight > backpackCapacity) {
             return 0.0;
-    }
+        }
         return price;
     }
 
@@ -248,16 +248,8 @@ public class GeneticImpl implements Genetic {
 
     private Specimen createSpecimen(List<Integer> parent1, List<Integer> parent2, int barrier) {
         List<Integer> chromosome = new ArrayList<>();
-        if((0.0 + (1) * new Random().nextDouble()) > crossOver.getProbability()) {
-            if(new Random().nextBoolean()) {
-                chromosome.addAll(new ArrayList<>(parent1));
-            } else {
-                chromosome.addAll(new ArrayList<>(parent2));
-            }
-        } else {
-            chromosome.addAll(getRange(parent1, 0, barrier));
-            chromosome.addAll(getRange(parent2, barrier, 26));
-        }
+        chromosome.addAll(getRange(parent1, 0, barrier));
+        chromosome.addAll(getRange(parent2, barrier, 26));
         Specimen specimen = new Specimen(chromosome);
         specimen.addEpoch();
         return specimen;
