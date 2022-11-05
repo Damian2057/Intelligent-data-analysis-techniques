@@ -19,7 +19,6 @@ public class GeneticImpl implements Genetic {
     private final static Mutation mutation = JsonReader.getMutationProperties();
     private static final DecimalFormat decimalFormat = new DecimalFormat("########.#");
     private static final int populationSize = JsonReader.getPopulationSize();
-    private static final int numberOfMutations = (int) (populationSize * mutation.getProbability());
     private final Logger logger = Logger.getLogger(Genetic.class.getSimpleName());
     private final List<BagPackItem> bagPackItems = CsvReader.getBagPackItems();
     private final int backpackCapacity = JsonReader.getBackpackCapacity();
@@ -30,8 +29,7 @@ public class GeneticImpl implements Genetic {
 
     public GeneticImpl() {
         logger.info("Adaptation default value for min: " + adaptationDefaultValue
-                + "\nThe number of Specimen taken to create a generation: " + numberOfParents
-                + "\nNumber of mutating: " + numberOfMutations);
+                + "\nThe number of Specimen taken to create a generation: " + numberOfParents);
     }
 
     private double adaptationFunction(Specimen specimen) {
@@ -271,6 +269,7 @@ public class GeneticImpl implements Genetic {
     private void mutationChance(List<Specimen> newGeneration) {
         Random rand = new Random();
         List<Specimen> mutated = new ArrayList<>();
+        int numberOfMutations = (int) (newGeneration.size() * mutation.getProbability());
         for (int i = 0; i < numberOfMutations; i++) {
             int randomIndex = rand.nextInt(newGeneration.size());
             Specimen randomElement = newGeneration.get(randomIndex);
