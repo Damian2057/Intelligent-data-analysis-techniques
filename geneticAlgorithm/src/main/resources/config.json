@@ -5,13 +5,13 @@
   },
   "crossOver": {
     "crossoverType": "DOUBLEPOINT",
-    "probability": 0.5
+    "probability": 0.04
   },
   "selectionType": "ROULETTE",
   "backpackCapacity": 6404180,
-  "populationSize": 200,
-  "numberOfIterations": 200,
+  "populationSize": 6000,
+  "numberOfIterations": 80,
 
   "display": 1,
-  "startTimes": 5
+  "startTimes": 1
 }

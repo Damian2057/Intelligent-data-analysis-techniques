@@ -304,17 +304,9 @@ public class GeneticImpl implements Genetic {
 
     private Specimen createSpecimen(List<Integer> parent1, List<Integer> parent2, int barrier1, int barrier2) {
         List<Integer> chromosome = new ArrayList<>();
-        if((0.0 + (1) * new Random().nextDouble()) > crossOver.getProbability()) {
-            if(new Random().nextBoolean()) {
-                chromosome.addAll(new ArrayList<>(parent1));
-            } else {
-                chromosome.addAll(new ArrayList<>(parent2));
-            }
-        } else {
-            chromosome.addAll(getRange(parent1, 0, barrier1));
-            chromosome.addAll(getRange(parent1, barrier1, barrier2));
-            chromosome.addAll(getRange(parent2, barrier2, 26));
-        }
+        chromosome.addAll(getRange(parent1, 0, barrier1));
+        chromosome.addAll(getRange(parent2, barrier1, barrier2));
+        chromosome.addAll(getRange(parent1, barrier2, 26));
         Specimen specimen = new Specimen(chromosome);
         specimen.addEpoch();
         return new Specimen(chromosome);
