@@ -7,16 +7,13 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Getter
 public class Config {
 
-    private final Properties properties;
-
-    public Config() {
+    public static Properties getProperties() {
         try {
             Path filePath = Path.of("src/main/resources/config.json");
             Gson gson = new Gson();
-            this.properties = gson.fromJson(Files.readString(filePath), Properties.class);
+            return gson.fromJson(Files.readString(filePath), Properties.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

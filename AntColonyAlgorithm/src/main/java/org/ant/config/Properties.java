@@ -10,5 +10,6 @@ public class Properties {
     private double beta;
     private int numberOfIteration;
     private double pheromoneEvaporation;
+    private String schemaName;
 
 }
