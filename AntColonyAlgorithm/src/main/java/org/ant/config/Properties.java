@@ -11,5 +11,6 @@ public class Properties {
     private int numberOfIteration;
     private double pheromoneEvaporation;
     private String schemaName;
+    private int display;
 
 }
