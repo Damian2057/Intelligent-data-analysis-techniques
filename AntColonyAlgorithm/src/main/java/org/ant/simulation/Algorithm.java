@@ -1,4 +1,4 @@
-package org.ant.simulation.algorithm;
+package org.ant.simulation;
 
 public interface Algorithm extends Runnable {
 }

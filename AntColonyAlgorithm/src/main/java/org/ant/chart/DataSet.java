@@ -3,7 +3,7 @@ package org.ant.chart;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.ant.simulation.model.Ant;
+import org.ant.model.Ant;
 
 import java.util.List;
 

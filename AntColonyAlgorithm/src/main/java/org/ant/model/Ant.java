@@ -1,4 +1,4 @@
-package org.ant.simulation.model;
+package org.ant.model;
 
 import lombok.Data;
 

@@ -1,7 +1,8 @@
-package org.ant.simulation.algorithm;
+package org.ant.simulation;
 
 import org.ant.config.Config;
 import org.ant.config.Properties;
+import org.ant.readers.LocationReader;
 
 public class AlgorithmImpl implements Algorithm {
 
