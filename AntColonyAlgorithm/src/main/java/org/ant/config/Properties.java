@@ -12,5 +12,5 @@ public class Properties {
     private double pheromoneEvaporation;
     private String schemaName;
     private int display;
-
+    private int startTimes;
 }

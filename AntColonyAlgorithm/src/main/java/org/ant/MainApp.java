@@ -1,12 +1,12 @@
 package org.ant;
 
-import org.ant.simulation.Algorithm;
+import org.ant.config.Config;
 import org.ant.simulation.AlgorithmImpl;
 
 public class MainApp {
     public static void main(String[] args) {
-        Algorithm algorithm = new AlgorithmImpl();
-        algorithm.run();
-
+        for (int i = 0; i < Config.getProperties().getStartTimes(); i++) {
+            new Thread(new AlgorithmImpl()).start();
+        }
     }
 }
