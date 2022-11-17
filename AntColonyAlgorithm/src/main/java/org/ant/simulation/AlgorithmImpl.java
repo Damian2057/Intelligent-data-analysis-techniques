@@ -42,6 +42,7 @@ public class AlgorithmImpl implements Algorithm {
         for (int i = 0; i < numberOfIterations; i++) {
             for (int j = 0; j < locations.size(); j++) {
                 for (Ant ant : colony) {
+                    //TODO: calculate roulette ect
                     ant.move();
                 }
             }
