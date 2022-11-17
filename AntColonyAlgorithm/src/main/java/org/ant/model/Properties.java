@@ -13,4 +13,5 @@ public class Properties {
     private String schemaName;
     private int display;
     private int startTimes;
+    private double initPheromone;
 }

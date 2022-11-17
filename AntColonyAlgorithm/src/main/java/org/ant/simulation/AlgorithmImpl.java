@@ -40,19 +40,20 @@ public class AlgorithmImpl implements Algorithm {
     public void run() {
         List<DataSet> dataSets = new ArrayList<>();
         for (int i = 0; i < numberOfIterations; i++) {
-
             for (int j = 0; j < locations.size(); j++) {
                 for (Ant ant : colony) {
                     ant.move();
                 }
             }
+            updatePheromones();
+            theBestAnt = findTheBest.apply(getTheBestAnt());
 
             if(i % display == 0) {
                 logger.info("Round of simulation number: " + i);
                 logger.info("Current best distance: " + theBestAnt.getDistance(distanceMatrix));
                 dataSets.add(new DataSet(i, colony));
             }
-
+            this.colony = factory.createColony(properties.getNumberOfAnts());
         }
 
 //        ChartGenerator chartGenerator = new ChartGenerator(dataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
@@ -76,7 +77,7 @@ public class AlgorithmImpl implements Algorithm {
     private void initializePheromone() {
         for (int i = 0; i < locations.size(); i++) {
             for (int j = 0; j < locations.size(); j++) {
-                this.pheromoneMatrix[i][j] = 1;
+                this.pheromoneMatrix[i][j] = properties.getInitPheromone();
             }
         }
     }
@@ -93,6 +94,17 @@ public class AlgorithmImpl implements Algorithm {
                         += 1 / ant.getDistance(distanceMatrix);
             }
         }
+    }
+
+    private Ant getTheBestAnt() {
+        Ant theBest = colony.get(0);
+        for (Ant ant : colony) {
+            if(ant.getDistance(distanceMatrix) < theBest.getDistance(distanceMatrix)) {
+                theBest = ant;
+            }
+        }
+
+        return theBest;
     }
 
 }
