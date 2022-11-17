@@ -1,4 +1,4 @@
-package org.ant.config;
+package org.ant.model;
 
 import lombok.Data;
 

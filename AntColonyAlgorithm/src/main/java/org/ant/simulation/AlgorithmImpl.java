@@ -1,11 +1,11 @@
 package org.ant.simulation;
 
 import org.ant.config.Config;
-import org.ant.config.Properties;
+import org.ant.model.Properties;
 import org.ant.factory.Factory;
 import org.ant.model.Ant;
 import org.ant.model.Location;
-import org.ant.readers.LocationReader;
+import org.ant.config.LocationReader;
 
 import java.util.List;
 import java.util.function.Function;
@@ -61,6 +61,14 @@ public class AlgorithmImpl implements Algorithm {
         for (int i = 0; i < locations.size(); i++) {
             for (int j = 0; j < locations.size(); j++) {
                 this.pheromoneMatrix[i][j] = 1;
+            }
+        }
+    }
+
+    private void pheromoneEvaporation() {
+        for (int i = 0; i < locations.size(); i++) {
+            for (int j = 0; j < locations.size(); j++) {
+                this.pheromoneMatrix[i][j] *= properties.getPheromoneEvaporation();
             }
         }
     }

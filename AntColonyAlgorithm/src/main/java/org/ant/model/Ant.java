@@ -2,30 +2,35 @@ package org.ant.model;
 
 import lombok.Data;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 
 @Data
 public class Ant {
-
     private double distance;
-    private Set<Integer> visitedLocations = new HashSet<>();
-    private Set<Integer> allLocations = new HashSet<>();
+    private List<Location> visitedLocations = new ArrayList<>();
 
-    public void addVisitedLocation(int number) {
-        if(visitedLocations.contains(number)) {
+
+    public void drawRandomLocation(List<Location> locations) {
+        List<Location> temp = new ArrayList<>(locations);
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(temp.size());
+        visitedLocations.add(temp.get(randomIndex));
+    }
+
+    public double getDistance(double[][] distances) {
+        if(visitedLocations.size() < 2){
             throw new RuntimeException();
-        } else {
-            visitedLocations.add(number);
         }
+        for (int i = 0; i < visitedLocations.size() - 1; i++) {
+            this.distance += distances[visitedLocations.get(i).getId() - 1][visitedLocations.get(i+1).getId() - 1];
+        }
+        return distance;
     }
 
-    public List<Integer> getAvailableLocations() {
-        Set<Integer> temp = new HashSet<>(allLocations);
-        temp.removeAll(visitedLocations);
-        return temp.stream().toList();
+    public void addVisitedLocation(Location location) {
+        visitedLocations.add(location);
     }
-
 
 }
