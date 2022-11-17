@@ -11,8 +11,9 @@ public class Ant {
     private double distance;
     private List<Location> visitedLocations = new ArrayList<>();
 
-    public void move() {
-
+    public void move(List<Location> locations, double[][] distanceMatrix, double[][] pheromoneMatrix) {
+        List<Location> otherLocations = new ArrayList<>(locations);
+        otherLocations.removeAll(visitedLocations);
     }
 
     public void drawRandomLocation(List<Location> locations) {
