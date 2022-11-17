@@ -1,4 +1,4 @@
-package org.ant.config;
+package org.ant.model;
 
 import lombok.Data;
 
@@ -11,5 +11,7 @@ public class Properties {
     private int numberOfIteration;
     private double pheromoneEvaporation;
     private String schemaName;
-
+    private int display;
+    private int startTimes;
+    private double initPheromone;
 }

@@ -1,9 +1,8 @@
 package org.ant.config;
 
 import com.google.gson.Gson;
-import lombok.Getter;
+import org.ant.model.Properties;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 

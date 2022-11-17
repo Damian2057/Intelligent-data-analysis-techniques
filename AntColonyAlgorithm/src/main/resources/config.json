@@ -5,5 +5,9 @@
   "beta": 1,
   "numberOfIteration": 1000,
   "pheromoneEvaporation": 0.1,
-  "schemaName": "A-n32-k5.txt"
+
+  "schemaName": "A-n32-k5.txt",
+  "initPheromone": 1,
+  "display": 1,
+  "startTimes": 1
 }

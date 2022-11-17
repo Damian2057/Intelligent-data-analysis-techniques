@@ -1,4 +1,4 @@
-package org.ant.readers;
+package org.ant.config;
 
 import org.ant.model.Location;
 
