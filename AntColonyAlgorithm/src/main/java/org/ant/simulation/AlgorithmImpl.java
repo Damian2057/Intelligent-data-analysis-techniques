@@ -65,10 +65,16 @@ public class AlgorithmImpl implements Algorithm {
         }
     }
 
-    private void pheromoneEvaporation() {
+    private void updatePheromones() {
         for (int i = 0; i < locations.size(); i++) {
             for (int j = 0; j < locations.size(); j++) {
                 this.pheromoneMatrix[i][j] *= properties.getPheromoneEvaporation();
+            }
+        }
+        for (Ant ant : colony) {
+            for (int i = 0; i < ant.getVisitedLocations().size() - 1; i++) {
+                this.pheromoneMatrix[ant.getVisitedLocations().get(i).getId() - 1][ant.getVisitedLocations().get(i + 1).getId() - 1]
+                        += 1 / ant.getDistance(distanceMatrix);
             }
         }
     }
