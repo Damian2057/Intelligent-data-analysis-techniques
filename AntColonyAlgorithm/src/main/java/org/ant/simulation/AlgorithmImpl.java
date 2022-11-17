@@ -1,5 +1,7 @@
 package org.ant.simulation;
 
+import org.ant.chart.ChartGenerator;
+import org.ant.chart.DataSet;
 import org.ant.config.Config;
 import org.ant.model.Properties;
 import org.ant.factory.Factory;
@@ -7,6 +9,7 @@ import org.ant.model.Ant;
 import org.ant.model.Location;
 import org.ant.config.LocationReader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -30,18 +33,31 @@ public class AlgorithmImpl implements Algorithm {
         colony = factory.createColony(properties.getNumberOfAnts());
         calculateDistances();
         initializePheromone();
+        theBestAnt = colony.get(0);
     }
 
     @Override
     public void run() {
+        List<DataSet> dataSets = new ArrayList<>();
         for (int i = 0; i < numberOfIterations; i++) {
+
+            for (int j = 0; j < locations.size(); j++) {
+                for (Ant ant : colony) {
+                    ant.move();
+                }
+            }
+
             if(i % display == 0) {
                 logger.info("Round of simulation number: " + i);
-                logger.info("Current best distance: " + theBestAnt.getDistance());
-//                dataSets.add(new DataSet(i,generation));
+                logger.info("Current best distance: " + theBestAnt.getDistance(distanceMatrix));
+                dataSets.add(new DataSet(i, colony));
             }
 
         }
+
+//        ChartGenerator chartGenerator = new ChartGenerator(dataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
+//        chartGenerator.pack();
+//        chartGenerator.setVisible(true);
     }
 
 
