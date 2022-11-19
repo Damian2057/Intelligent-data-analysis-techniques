@@ -9,4 +9,5 @@ public class Location {
     private int id;
     private int x;
     private int y;
+    private double partialProbability;
 }
