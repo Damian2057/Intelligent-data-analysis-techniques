@@ -11,10 +11,6 @@ public class Ant {
     private double distance;
     private List<Location> visitedLocations = new ArrayList<>();
 
-    public void move() {
-
-    }
-
     public void drawRandomLocation(List<Location> locations) {
         List<Location> temp = new ArrayList<>(locations);
         Random rand = new Random();
@@ -23,6 +19,7 @@ public class Ant {
     }
 
     public double getDistance(double[][] distances) {
+        distance = 0.0;
         if(visitedLocations.size() < 2){
             throw new RuntimeException("to calculate the distance you need to pass at least two locations");
         }
