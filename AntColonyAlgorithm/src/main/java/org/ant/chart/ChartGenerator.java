@@ -2,13 +2,10 @@ package org.ant.chart;
 
 
 import org.ant.model.Ant;
-import org.ant.model.Location;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.SeriesRenderingOrder;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.ui.ApplicationFrame;
@@ -24,17 +21,12 @@ public class ChartGenerator extends ApplicationFrame {
 
         super("Chart: " + title);
 
-        final XYSeries originSeries = new XYSeries("f(x)");
         final XYSeries avgSeries = new XYSeries("avg(x)");
         for (DataSet dataSet : dataSets) {
-            for (Ant ant : dataSet.getList()) {
-                originSeries.add(dataSet.getRound(), ant.getDistance());
-            }
             avgSeries.add(dataSet.getRound(),getAvg(dataSet.getList()));
         }
 
-        final XYSeriesCollection data = new XYSeriesCollection(originSeries);
-        data.addSeries(avgSeries);
+        final XYSeriesCollection data = new XYSeriesCollection(avgSeries);
 
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Chart: " + title,
@@ -50,16 +42,48 @@ public class ChartGenerator extends ApplicationFrame {
         XYPlot plot = (XYPlot) chart.getPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+
+        renderer.setSeriesShapesVisible(0, false);
+        plot.setRenderer(renderer);
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
+        setContentPane(chartPanel);
+    }
+
+    public ChartGenerator(List<DataSet> dataSets) {
+
+        super("Chart Colony ");
+
+        final XYSeries originSeries = new XYSeries("f(x)");
+        for (DataSet dataSet : dataSets) {
+            for (Ant ant : dataSet.getList()) {
+                originSeries.add(dataSet.getRound(), ant.getDistance());
+            }
+        }
+
+        final XYSeriesCollection data = new XYSeriesCollection(originSeries);
+
+        final JFreeChart chart = ChartFactory.createXYLineChart(
+                "Chart Colony",
+                "Round",
+                "Distance",
+                data,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        XYPlot plot = (XYPlot) chart.getPlot();
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         Rectangle rect = new Rectangle(1, 1);
 
-        renderer.setDefaultStroke(new BasicStroke(5.0f));
-        renderer.setAutoPopulateSeriesStroke(false);
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesShape(0, rect);
 
-        renderer.setSeriesShapesVisible(1, false);
         plot.setRenderer(renderer);
-        plot.setSeriesRenderingOrder(SeriesRenderingOrder.FORWARD);
+
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
         setContentPane(chartPanel);

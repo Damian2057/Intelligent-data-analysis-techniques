@@ -63,6 +63,10 @@ public class AlgorithmImpl implements Algorithm {
         ChartGenerator chartGenerator = new ChartGenerator(dataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
         chartGenerator.pack();
         chartGenerator.setVisible(true);
+
+        ChartGenerator chartGenerator2 = new ChartGenerator(dataSets);
+        chartGenerator2.pack();
+        chartGenerator2.setVisible(true);
         RoadGenerator.generateRoad(theBestAnt);
     }
 
