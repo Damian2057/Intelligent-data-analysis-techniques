@@ -1,0 +1,13 @@
+{
+  "numberOfAnts": 30,
+  "probabilityOfRandomAttraction": 0.3,
+  "alfa": 1,
+  "beta": 2,
+  "numberOfIteration": 1000,
+  "pheromoneEvaporation": 0.1,
+
+  "schemaName": "P-n16-k8.txt",
+  "initPheromone": 1,
+  "display": 1,
+  "startTimes": 5
+}

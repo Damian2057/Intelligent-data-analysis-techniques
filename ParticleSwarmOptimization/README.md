@@ -1,0 +1,1 @@
+Implementation of the Ant Colony Algorithm for finding optimal paths that is based on the behavior of ants searching for food.
