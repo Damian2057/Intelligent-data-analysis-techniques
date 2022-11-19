@@ -2,6 +2,7 @@ package org.ant.simulation;
 
 import org.ant.chart.ChartGenerator;
 import org.ant.chart.DataSet;
+import org.ant.chart.RoadGenerator;
 import org.ant.config.Config;
 import org.ant.model.Properties;
 import org.ant.factory.Factory;
@@ -62,10 +63,7 @@ public class AlgorithmImpl implements Algorithm {
         ChartGenerator chartGenerator = new ChartGenerator(dataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
         chartGenerator.pack();
         chartGenerator.setVisible(true);
-//
-//        ChartGenerator chartGenerator2 = new ChartGenerator(theBestAnt);
-//        chartGenerator2.pack();
-//        chartGenerator2.setVisible(true);
+        RoadGenerator.generateRoad(theBestAnt);
     }
 
 
