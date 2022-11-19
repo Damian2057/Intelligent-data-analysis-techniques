@@ -1,1 +1,1 @@
-Implementation of the Ant Colony Algorithm for finding optimal paths that is based on the behavior of ants searching for food.
+PSO algorithm simulates animal's social behavior, including insects, herds, birds and fishes.
