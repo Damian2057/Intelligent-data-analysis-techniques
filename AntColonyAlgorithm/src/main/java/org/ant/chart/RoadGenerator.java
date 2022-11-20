@@ -22,8 +22,8 @@ public class RoadGenerator extends JFrame {
                 List<Double> x = new ArrayList<>();
                 List<Double> y = new ArrayList<>();
                 for (Location location : ant.getVisitedLocations()) {
-                    x.add((double) location.getX() * 3);
-                    y.add((double) location.getY() * 3);
+                    x.add(50 + (double) location.getX() * 5);
+                    y.add(50 +(double) location.getY() * 5);
                 }
                 Path2D polyline = new Path2D.Double();
                 polyline.moveTo(x.get(0), y.get(0));
