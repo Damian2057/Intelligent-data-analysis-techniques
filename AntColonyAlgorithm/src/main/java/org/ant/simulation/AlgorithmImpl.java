@@ -25,8 +25,8 @@ public class AlgorithmImpl implements Algorithm {
     private final Factory factory = new Factory();
     private List<Ant> colony;
     private Ant theBestAnt;
-    private double[][] distanceMatrix = new double[locations.size()][locations.size()];
-    private double[][] pheromoneMatrix = new double[locations.size()][locations.size()];
+    private final double[][] distanceMatrix = new double[locations.size()][locations.size()];
+    private final double[][] pheromoneMatrix = new double[locations.size()][locations.size()];
     private final Function<Ant, Ant> findTheBest = best -> best.getDistance(distanceMatrix) < theBestAnt.getDistance(distanceMatrix) ? best : theBestAnt;
 
     public AlgorithmImpl() {
@@ -129,7 +129,6 @@ public class AlgorithmImpl implements Algorithm {
         Random random = new Random();
         double randomValue = 0 + random.nextDouble();
         if(randomValue < properties.getProbabilityOfRandomAttraction()) {
-            System.out.println(randomValue);
             randomLocation(ant);
         } else {
             roulette(ant);
