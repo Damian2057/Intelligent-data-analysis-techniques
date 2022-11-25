@@ -1,6 +1,6 @@
 {
   "numberOfAnts": 30,
-  "probabilityOfRandomAttraction": 0.3,
+  "probabilityOfRandomAttraction": 0.01,
   "alfa": 1,
   "beta": 2,
   "numberOfIteration": 1000,
