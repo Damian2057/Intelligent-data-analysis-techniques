@@ -17,16 +17,22 @@ import java.util.List;
 
 public class ChartGenerator extends ApplicationFrame {
 
-    public ChartGenerator(List<DataSet> dataSets, String title) {
+    public ChartGenerator(List<DataSet> dataSets, List<MaxDataSet> maxDataSets, String title) {
 
         super("Chart: " + title);
 
         final XYSeries avgSeries = new XYSeries("avg(x)");
         for (DataSet dataSet : dataSets) {
-            avgSeries.add(dataSet.getRound(),getAvg(dataSet.getList()));
+            avgSeries.add(dataSet.getRound(), getAvg(dataSet.getList()));
+        }
+
+        final XYSeries maxSeries = new XYSeries("max(x)");
+        for (MaxDataSet dataSet : maxDataSets) {
+            maxSeries.add(dataSet.getRound(), dataSet.getAnt().getDistance());
         }
 
         final XYSeriesCollection data = new XYSeriesCollection(avgSeries);
+        data.addSeries(maxSeries);
 
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Chart: " + title,
@@ -44,6 +50,7 @@ public class ChartGenerator extends ApplicationFrame {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
         renderer.setSeriesShapesVisible(0, false);
+        renderer.setSeriesShapesVisible(1, false);
         plot.setRenderer(renderer);
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
@@ -95,6 +102,16 @@ public class ChartGenerator extends ApplicationFrame {
             sum += ant.getDistance();
         }
         return sum / colony.size();
+    }
+
+    private Ant getMin(List<Ant> colony) {
+        Ant maxAnt = colony.get(0);
+        for (Ant ant : colony) {
+            if(ant.getDistance() < maxAnt.getDistance()) {
+                maxAnt = ant;
+            }
+        }
+        return maxAnt;
     }
 
 }

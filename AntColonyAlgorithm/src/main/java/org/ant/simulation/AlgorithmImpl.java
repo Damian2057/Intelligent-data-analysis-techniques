@@ -2,6 +2,7 @@ package org.ant.simulation;
 
 import org.ant.chart.ChartGenerator;
 import org.ant.chart.DataSet;
+import org.ant.chart.MaxDataSet;
 import org.ant.chart.RoadGenerator;
 import org.ant.config.Config;
 import org.ant.model.Properties;
@@ -39,6 +40,7 @@ public class AlgorithmImpl implements Algorithm {
     @Override
     public void run() {
         List<DataSet> dataSets = new ArrayList<>();
+        List<MaxDataSet> maxDataSets = new ArrayList<>();
         for (int i = 0; i < numberOfIterations; i++) {
             for (Ant ant : colony) {
                 ant.drawRandomLocation(locations);
@@ -55,12 +57,13 @@ public class AlgorithmImpl implements Algorithm {
                 logger.info("Round of simulation number: " + i);
                 logger.info("Current best distance: " + theBestAnt.getDistance(distanceMatrix));
                 dataSets.add(new DataSet(i, colony));
+                maxDataSets.add(new MaxDataSet(i, theBestAnt));
             }
             this.colony = factory.createColony(properties.getNumberOfAnts());
         }
 
         logger.info("Solution: " + theBestAnt.getDistance(distanceMatrix) + theBestAnt.getVisitedLocations());
-        ChartGenerator chartGenerator = new ChartGenerator(dataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
+        ChartGenerator chartGenerator = new ChartGenerator(dataSets, maxDataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
         chartGenerator.pack();
         chartGenerator.setVisible(true);
 
@@ -123,6 +126,17 @@ public class AlgorithmImpl implements Algorithm {
     }
 
     private void move(Ant ant) {
+        Random random = new Random();
+        double randomValue = 0 + random.nextDouble();
+        if(randomValue < properties.getProbabilityOfRandomAttraction()) {
+            System.out.println(randomValue);
+            randomLocation(ant);
+        } else {
+            roulette(ant);
+        }
+    }
+
+    private void roulette(Ant ant) {
         List<Location> otherLocations = new ArrayList<>(locations);
         otherLocations.removeAll(ant.getVisitedLocations());
         Location lastLocation = ant.getVisitedLocations().get(ant.getVisitedLocations().size()-1);
@@ -140,6 +154,15 @@ public class AlgorithmImpl implements Algorithm {
             location.setPartialProbability(location.getPartialProbability() / totalSum);
         }
         ant.addVisitedLocation(select(otherLocations));
+    }
+
+    private void randomLocation(Ant ant) {
+        Random random = new Random();
+        List<Location> otherLocations = new ArrayList<>(locations);
+        otherLocations.removeAll(ant.getVisitedLocations());
+        int randomIndex = random.nextInt(otherLocations.size());
+        Location location = otherLocations.get(randomIndex);
+        ant.addVisitedLocation(location);
     }
 
     private Location select(List<Location> wheelProbabilities) {
