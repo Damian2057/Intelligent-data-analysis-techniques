@@ -26,7 +26,7 @@ public class ChartGenerator extends ApplicationFrame {
             avgSeries.add(dataSet.getRound(), getAvg(dataSet.getList()));
         }
 
-        final XYSeries maxSeries = new XYSeries("max(x)");
+        final XYSeries maxSeries = new XYSeries("min(x)");
         for (MaxDataSet dataSet : maxDataSets) {
             maxSeries.add(dataSet.getRound(), dataSet.getAnt().getDistance());
         }
