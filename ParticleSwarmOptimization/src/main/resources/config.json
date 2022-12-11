@@ -5,7 +5,7 @@
   "inertia": 0.1,
   "cognitiveConstant": 0.35,
   "socialConstant": 0.45,
-  "adaptationFunction": "(x+1)^2",
+  "adaptationFunction": "(x + 2*y - 7)^2 + (2x + y - 5)^2",
 
   "numberOfIteration": 1000,
   "display": 1,
