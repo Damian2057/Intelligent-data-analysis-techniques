@@ -1,13 +1,13 @@
 {
-  "numberOfParticles": 50,
+  "numberOfParticles": 500,
   "xBorder": "-10, 10",
   "yBorder": "-10, 10",
   "inertia": 0.1,
   "cognitiveConstant": 0.35,
-  "socialConstant": 0.45,
+  "socialConstant": 0.1,
   "adaptationFunction": "(x + 2*y - 7)^2 + (2x + y - 5)^2",
 
-  "numberOfIteration": 1000,
+  "numberOfIteration": 100,
   "display": 1,
   "startTimes": 5
 }

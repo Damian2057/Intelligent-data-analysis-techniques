@@ -14,18 +14,18 @@ import java.util.List;
 
 public class ChartGenerator extends ApplicationFrame {
 
-    public ChartGenerator(List<DataSet> dataSets) {
-        super("Chart: " + "swarm");
+    public ChartGenerator(List<DataSet> dataSets, String title) {
+        super(title);
 
-        final XYSeries avgSeries = new XYSeries("avg(x)");
+        final XYSeries avgSeries = new XYSeries("f(x)");
         for (DataSet dataSet : dataSets) {
-            //avgSeries.add(dataSet.getRound(), getAvg(dataSet.getList()));
+            avgSeries.add(dataSet.getRound(), dataSet.getValue());
         }
 
         final XYSeriesCollection data = new XYSeriesCollection(avgSeries);
 
         final JFreeChart chart = ChartFactory.createXYLineChart(
-                "Chart: " + "swarm",
+                title,
                 "Round",
                 "Distance",
                 data,
@@ -46,5 +46,4 @@ public class ChartGenerator extends ApplicationFrame {
         chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
         setContentPane(chartPanel);
     }
-
 }

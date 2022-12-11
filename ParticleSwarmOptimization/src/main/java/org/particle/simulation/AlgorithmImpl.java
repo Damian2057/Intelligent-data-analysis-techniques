@@ -20,6 +20,7 @@ public class AlgorithmImpl implements Algorithm {
 
     private static final Properties properties = Config.getProperties();
     private final static int numberOfIterations = Config.getProperties().getNumberOfIteration();
+    private static final int display = Config.getProperties().getDisplay();
     private final static Range<Double> xRange = Range.between(properties.getXDownBorder(), properties.getXUpBorder());
     private final static Range<Double> yRange = Range.between(properties.getYDownBorder(), properties.getYUpBorder());
     private final Expression expression = new ExpressionBuilder(properties.getAdaptationFunction())
@@ -27,7 +28,7 @@ public class AlgorithmImpl implements Algorithm {
             .build();
     private final Logger logger = Logger.getLogger(Algorithm.class.getSimpleName());
     private final Factory factory = new Factory();
-    private List<Particle> swarm;
+    private final List<Particle> swarm;
     private Particle bestParticle;
     private final Function<Particle, Particle> findTheBest = checked ->
             checked.getBestAdaptation() < bestParticle.getBestAdaptation() ? checked : bestParticle;
@@ -41,6 +42,7 @@ public class AlgorithmImpl implements Algorithm {
     @Override
     public void run() {
         List<DataSet> dataSets = new ArrayList<>();
+        List<DataSet> maxDataSets = new ArrayList<>();
          for (int i = 0; i < numberOfIterations; i++) {
              calculateAdaptation();
              for (Particle particle : swarm) {
@@ -49,16 +51,30 @@ public class AlgorithmImpl implements Algorithm {
              for (Particle particle: swarm) {
                  updateParticlePosition(particle);
              }
+             if(i % display == 0) {
+                 logger.info("Round of simulation number: " + i);
+                 logger.info("Current best: " + bestParticle.toString());
+                 dataSets.add(new DataSet(i, getAvg(swarm)));
+                 maxDataSets.add(new DataSet(i, bestParticle.getBestAdaptation()));
+             }
         }
 
         logger.info("Solution: " + bestParticle.toString());
-//        ChartGenerator chartGenerator = new ChartGenerator(dataSets);
-//        chartGenerator.pack();
-//        chartGenerator.setVisible(true);
+        ChartGenerator chartGenerator = new ChartGenerator(dataSets,
+                "Avg: " + bestParticle.getBestX() + " " + bestParticle.getBestY());
+        chartGenerator.pack();
+        chartGenerator.setVisible(true);
+
+        ChartGenerator chartGenerator2 = new ChartGenerator(maxDataSets,
+                "Solution: " + bestParticle.getBestX() + " " + bestParticle.getBestY());
+        chartGenerator2.pack();
+        chartGenerator2.setVisible(true);
     }
 
     private void updateParticlePosition(Particle particle) {
         particle.setSpeed(calculateSpeed(particle));
+        particle.setX(particle.getX() + particle.getSpeed());
+        particle.setY(particle.getY() + particle.getSpeed());
         if(xRange.contains(particle.getX() + particle.getSpeed())) {
             particle.setX(particle.getX() + particle.getSpeed());
         } else {
@@ -126,6 +142,14 @@ public class AlgorithmImpl implements Algorithm {
     private double getLevelOfComponent() {
         Random random = new Random();
         return 0 + (1) * random.nextDouble();
+    }
+
+    private double getAvg(List<Particle> swarm) {
+        double sum = 0;
+        for (Particle particle : swarm) {
+            sum += particle.getBestAdaptation();
+        }
+        return sum / swarm.size();
     }
 
 }
