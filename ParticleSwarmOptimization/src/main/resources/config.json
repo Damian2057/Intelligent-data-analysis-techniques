@@ -1,13 +1,13 @@
 {
-  "numberOfAnts": 30,
-  "probabilityOfRandomAttraction": 0.3,
-  "alfa": 1,
-  "beta": 2,
-  "numberOfIteration": 1000,
-  "pheromoneEvaporation": 0.1,
+  "numberOfParticles": 30,
+  "xBorder": "-10, 10",
+  "yBorder": "-10, 10",
+  "inertia": 0.1,
+  "cognitiveConstant": 0.35,
+  "socialConstant": 0.45,
+  "adaptationFunction": "(x+1)^2",
 
-  "schemaName": "P-n16-k8.txt",
-  "initPheromone": 1,
+  "numberOfIteration": 1000,
   "display": 1,
   "startTimes": 5
 }
