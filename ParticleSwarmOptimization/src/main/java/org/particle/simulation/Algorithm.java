@@ -1,4 +1,4 @@
 package org.particle.simulation;
 
-public interface Algorithm {
+public interface Algorithm extends Runnable {
 }
