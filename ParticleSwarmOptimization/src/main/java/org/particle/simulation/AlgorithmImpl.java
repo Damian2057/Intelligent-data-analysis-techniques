@@ -73,8 +73,6 @@ public class AlgorithmImpl implements Algorithm {
 
     private void updateParticlePosition(Particle particle) {
         particle.setSpeed(calculateSpeed(particle));
-        particle.setX(particle.getX() + particle.getSpeed());
-        particle.setY(particle.getY() + particle.getSpeed());
         if(xRange.contains(particle.getX() + particle.getSpeed())) {
             particle.setX(particle.getX() + particle.getSpeed());
         } else {

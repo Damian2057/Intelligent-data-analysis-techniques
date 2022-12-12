@@ -1,5 +1,5 @@
 {
-  "numberOfParticles": 500,
+  "numberOfParticles": 100,
   "xBorder": "-10, 10",
   "yBorder": "-10, 10",
   "inertia": 0.1,

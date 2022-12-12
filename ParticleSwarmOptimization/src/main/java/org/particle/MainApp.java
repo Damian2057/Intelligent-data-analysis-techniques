@@ -1,7 +1,6 @@
 package org.particle;
 
 import org.particle.config.Config;
-import org.particle.simulation.Algorithm;
 import org.particle.simulation.AlgorithmImpl;
 
 public class MainApp {
