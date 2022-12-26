@@ -27,7 +27,7 @@ public class ChartGenerator extends ApplicationFrame {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 title,
                 "Round",
-                "Distance",
+                "Value",
                 data,
                 PlotOrientation.VERTICAL,
                 true,
