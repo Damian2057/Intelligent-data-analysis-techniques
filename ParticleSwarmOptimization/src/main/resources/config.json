@@ -2,12 +2,12 @@
   "numberOfParticles": 100,
   "xBorder": "-10, 10",
   "yBorder": "-10, 10",
-  "inertia": 0.1,
+  "inertia": 0.03,
   "cognitiveConstant": 1.5,
   "socialConstant": 0.1,
   "adaptationFunction": "(x + 2*y - 7)^2 + (2x + y - 5)^2",
 
-  "numberOfIteration": 100,
+  "numberOfIteration": 300,
   "display": 1,
-  "startTimes": 5
+  "startTimes": 1
 }

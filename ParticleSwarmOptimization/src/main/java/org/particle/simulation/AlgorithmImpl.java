@@ -19,10 +19,10 @@ import java.util.logging.Logger;
 public class AlgorithmImpl implements Algorithm {
 
     private static final Properties properties = Config.getProperties();
-    private final static int numberOfIterations = Config.getProperties().getNumberOfIteration();
-    private static final int display = Config.getProperties().getDisplay();
-    private final static Range<Double> xRange = Range.between(properties.getXDownBorder(), properties.getXUpBorder());
-    private final static Range<Double> yRange = Range.between(properties.getYDownBorder(), properties.getYUpBorder());
+    private static final int NUMBER_OF_ITERATION = Config.getProperties().getNumberOfIteration();
+    private static final int DISPLAY = Config.getProperties().getDisplay();
+    private static final Range<Double> xRange = Range.between(properties.getXDownBorder(), properties.getXUpBorder());
+    private static final Range<Double> yRange = Range.between(properties.getYDownBorder(), properties.getYUpBorder());
     private final Expression expression = new ExpressionBuilder(properties.getAdaptationFunction())
             .variables("x", "y")
             .build();
@@ -43,7 +43,7 @@ public class AlgorithmImpl implements Algorithm {
     public void run() {
         List<DataSet> dataSets = new ArrayList<>();
         List<DataSet> maxDataSets = new ArrayList<>();
-         for (int i = 0; i < numberOfIterations; i++) {
+         for (int i = 0; i < NUMBER_OF_ITERATION; i++) {
              calculateAdaptation();
              for (Particle particle : swarm) {
                  bestParticle = findTheBest.apply(particle);
@@ -51,7 +51,7 @@ public class AlgorithmImpl implements Algorithm {
              for (Particle particle: swarm) {
                  updateParticlePosition(particle);
              }
-             if(i % display == 0) {
+             if(i % DISPLAY == 0) {
                  logger.info("Round of simulation number: " + i);
                  logger.info("Current best: " + bestParticle.toString());
                  dataSets.add(new DataSet(i, getAvg(swarm)));
@@ -69,6 +69,7 @@ public class AlgorithmImpl implements Algorithm {
                 "Solution: " + bestParticle.getBestX() + " " + bestParticle.getBestY());
         chartGenerator2.pack();
         chartGenerator2.setVisible(true);
+
     }
 
     private void updateParticlePosition(Particle particle) {
