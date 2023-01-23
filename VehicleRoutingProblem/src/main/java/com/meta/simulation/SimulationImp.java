@@ -69,6 +69,7 @@ public class SimulationImp implements Simulation {
         ChartGenerator chartGenerator = new ChartGenerator(dataSets, maxDataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
         chartGenerator.pack();
         chartGenerator.setVisible(true);
+        RoadGenerator.generateRoad(theBestAnt);
     }
 
     private void move(Ant ant) {
@@ -77,10 +78,11 @@ public class SimulationImp implements Simulation {
 
         while (!isAntVisitEveryLocation(ant)) {
             List<Location> availableLocationByTime = getAvailableLocationByTime(ant, time);
+            List<Location> availableLocationByWeight = new ArrayList<>();
             if (availableLocationByTime.isEmpty()) {
                 time += 1;
             } else {
-                List<Location> availableLocationByWeight = getAvailableLocationByWeight(availableLocationByTime,
+                availableLocationByWeight = getAvailableLocationByWeight(availableLocationByTime,
                         weight);
                 if (availableLocationByWeight.isEmpty()) {
                     ant.addVisitedLocation(base);
@@ -94,7 +96,23 @@ public class SimulationImp implements Simulation {
                     ant.setTime(time);
                 }
             }
+            if (time > findMax()) {
+                //the truck came to the warehouse; reset day
+                time = 0.0;
+                weight = 0.0;
+            }
         }
+    }
+
+    private double findMax() {
+        double maxTime = locations.get(0).getDueDate();
+        for (Location location :
+                locations) {
+            if (location.getDueDate() > maxTime) {
+                maxTime = location.getDueDate();
+            }
+        }
+        return maxTime;
     }
 
     private Location goToLocation(Ant ant, List<Location> locations) {
@@ -112,7 +130,7 @@ public class SimulationImp implements Simulation {
         List<Location> locationCopy = new ArrayList<>(locations);
         locationCopy.removeAll(ant.getVisitedLocations());
         for (Location location : locationCopy) {
-            if (location.getReadyTime() <= time) {
+            if (time >= location.getReadyTime() && time <= location.getDueDate()) {
                 availableLocation.add(location);
             }
         }
@@ -194,9 +212,25 @@ public class SimulationImp implements Simulation {
         return wheelProbabilities.get(selected);
     }
 
-
     private void updatePheromones() {
-
+        for (int i = 0; i < locations.size(); i++) {
+            for (int j = i; j < locations.size(); j++) {
+                double index1 = pheromoneMatrix[i][j] * properties.getPheromoneEvaporation();
+                this.pheromoneMatrix[i][j] = index1;
+                this.pheromoneMatrix[j][i] = index1;
+            }
+        }
+        for (Ant ant : colony) {
+            for (int i = 0; i < ant.getVisitedLocations().size() - 1; i++) {
+                int index1 = ant.getVisitedLocations().get(i).getId() - 1;
+                int index2 = ant.getVisitedLocations().get(i + 1).getId() - 1;
+                double distance = ant.getDistance(distanceMatrix);
+                this.pheromoneMatrix[index1][index2]
+                        += 1.0 / distance;
+                this.pheromoneMatrix[index2][index1]
+                        += 1.0 / distance;
+            }
+        }
     }
 
 }

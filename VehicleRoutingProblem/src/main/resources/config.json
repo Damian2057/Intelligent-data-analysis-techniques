@@ -7,7 +7,7 @@
   "pheromoneEvaporation": 0.1,
   "vehicleCapacity": 200,
 
-  "schemaName": "R101",
+  "schemaName": "R102",
   "initPheromone": 0.01,
   "display": 1
 }
