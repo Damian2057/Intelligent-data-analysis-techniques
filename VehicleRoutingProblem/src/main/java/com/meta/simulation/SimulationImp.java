@@ -1,10 +1,14 @@
 package com.meta.simulation;
 
 import com.meta.chart.ChartGenerator;
+import com.meta.chart.DataSet;
+import com.meta.chart.MaxDataSet;
+import com.meta.chart.RoadGenerator;
 import com.meta.config.Config;
 import com.meta.config.LocationReader;
 import com.meta.factory.Factory;
-import com.meta.logic.Algorithm;
+import com.meta.logic.AntAlgorithm;
+import com.meta.logic.TwoOPT;
 import com.meta.model.Ant;
 import com.meta.model.Location;
 import com.meta.model.Properties;
@@ -19,77 +23,137 @@ public class SimulationImp implements Simulation {
 
     private static final Properties properties = Config.getProperties();
     private static final List<Location> locations = LocationReader.getLocations(properties.getSchemaName());
+    private static final Location base = locations.get(0);
     private final Logger logger = Logger.getLogger(Simulation.class.getSimpleName());
     private final Factory factory = new Factory();
     private final double[][] distanceMatrix;
     private final double[][] pheromoneMatrix;
     private List<Ant> colony;
     private Ant theBestAnt;
-    private double time;
 
     public SimulationImp() {
         logger.info("Parameter initialization");
-        this.distanceMatrix = Algorithm.calculateDistances(locations);
-        this.pheromoneMatrix = Algorithm.initializePheromone(locations, properties.getInitPheromone());
+        this.distanceMatrix = AntAlgorithm.calculateDistances(locations);
+        this.pheromoneMatrix = AntAlgorithm.initializePheromone(locations, properties.getInitPheromone());
         colony = factory.createColony(properties.getNumberOfAnts());
         theBestAnt = colony.get(0);
     }
 
     @Override
     public void run() {
+        List<DataSet> dataSets = new ArrayList<>();
+        List<MaxDataSet> maxDataSets = new ArrayList<>();
         logger.info("The simulation has started");
 
         for (int i = 0; i < properties.getNumberOfIteration(); i++) {
             colony.forEach(ant -> ant.addVisitedLocation(locations.get(0)));
-
-            for (int j = 0; j < locations.size() - 1; j++) {
-                for (Ant ant : colony) {
-                    move(ant);
-                }
+            for (Ant ant : colony) {
+                move(ant);
             }
+
             colony.forEach(ant -> ant.getDistance(distanceMatrix));
             updatePheromones();
-            this.theBestAnt = Algorithm.findTheBest(theBestAnt, colony);
+            this.theBestAnt = AntAlgorithm.findTheBest(theBestAnt, colony);
+            this.theBestAnt = TwoOPT.improveSolution(this.theBestAnt);
 
             if(i % properties.getDisplay() == 0) {
                 logger.info("Round of simulation number: " + i);
                 logger.info("Current best distance: " + theBestAnt.getDistance(distanceMatrix));
+                dataSets.add(new DataSet(i, colony));
+                maxDataSets.add(new MaxDataSet(i, theBestAnt));
             }
             this.colony = factory.createColony(properties.getNumberOfAnts());
         }
 
-        logger.info("Solution: " + theBestAnt.getDistance(distanceMatrix) + theBestAnt.getVisitedLocations());
-//        ChartGenerator chartGenerator = new ChartGenerator(dataSets, maxDataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
-//        chartGenerator.pack();
-//        chartGenerator.setVisible(true);
-//
-//        ChartGenerator chartGenerator2 = new ChartGenerator(dataSets);
-//        chartGenerator2.pack();
-//        chartGenerator2.setVisible(true);
-//        RoadGenerator.generateRoad(theBestAnt);
+        logger.info("Solution: " + theBestAnt.getDistance(distanceMatrix) + "Ant: " + theBestAnt.toString());
+        ChartGenerator chartGenerator = new ChartGenerator(dataSets, maxDataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
+        chartGenerator.pack();
+        chartGenerator.setVisible(true);
     }
 
     private void move(Ant ant) {
-        Random random = new Random();
-        double randomValue = 0 + random.nextDouble();
-        if(randomValue < properties.getProbabilityOfRandomAttraction()) {
-            randomLocation(ant);
-        } else {
-            roulette(ant);
+        double time = 0.0;
+        double weight = 0.0;
+
+        while (!isAntVisitEveryLocation(ant)) {
+            List<Location> availableLocationByTime = getAvailableLocationByTime(ant, time);
+            if (availableLocationByTime.isEmpty()) {
+                time += 1;
+            } else {
+                List<Location> availableLocationByWeight = getAvailableLocationByWeight(availableLocationByTime,
+                        weight);
+                if (availableLocationByWeight.isEmpty()) {
+                    ant.addVisitedLocation(base);
+                    weight = 0.0;
+                    time = 0.0;
+                } else {
+                    Location location = goToLocation(ant, availableLocationByWeight);
+                    weight += location.getDemand();
+                    time += location.getServiceTime();
+                    ant.setCurrentWeight(weight);
+                    ant.setTime(time);
+                }
+            }
         }
     }
 
-    private void randomLocation(Ant ant) {
-
+    private Location goToLocation(Ant ant, List<Location> locations) {
+        Random random = new Random();
+        double randomValue = 0 + random.nextDouble();
+        if(randomValue < properties.getProbabilityOfRandomAttraction()) {
+            return randomLocation(ant, locations);
+        } else {
+            return roulette(ant, locations);
+        }
     }
 
-    private void roulette(Ant ant) {
-        List<Location> otherLocations = new ArrayList<>(locations);
-        otherLocations.removeAll(ant.getVisitedLocations());
+    private List<Location> getAvailableLocationByTime(Ant ant, double time) {
+        List<Location> availableLocation = new ArrayList<>();
+        List<Location> locationCopy = new ArrayList<>(locations);
+        locationCopy.removeAll(ant.getVisitedLocations());
+        for (Location location : locationCopy) {
+            if (location.getReadyTime() <= time) {
+                availableLocation.add(location);
+            }
+        }
+        return availableLocation;
+    }
+
+    private List<Location> getAvailableLocationByWeight(List<Location> locations, double weight) {
+        List<Location> availableLocation = new ArrayList<>();
+        for (Location location : locations) {
+            if (location.getDemand() + weight <= properties.getVehicleCapacity()) {
+                availableLocation.add(location);
+            }
+        }
+
+        return availableLocation;
+    }
+
+    private boolean isAntVisitEveryLocation(Ant ant) {
+        List<Location> visitedLocations = new ArrayList<>(locations);
+        visitedLocations.removeAll(ant.getVisitedLocations());
+        if (visitedLocations.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private Location randomLocation(Ant ant, List<Location> locations) {
+        Random random = new Random();
+        int randomIndex = random.nextInt(locations.size());
+        Location location = locations.get(randomIndex);
+        ant.addVisitedLocation(location);
+        return location;
+    }
+
+    private Location roulette(Ant ant, List<Location> locations) {
+        locations.removeAll(ant.getVisitedLocations());
         Location lastLocation = ant.getVisitedLocations().get(ant.getVisitedLocations().size()-1);
         double totalSum = 0.0;
         double partialSum;
-        for (Location location : otherLocations) {
+        for (Location location : locations) {
             partialSum = Math.pow(pheromoneMatrix[location.getId() - 1][lastLocation.getId() - 1],
                     properties.getAlfa()) *
                     Math.pow((1.0 / distanceMatrix[location.getId() - 1][lastLocation.getId() - 1]),
@@ -97,10 +161,12 @@ public class SimulationImp implements Simulation {
             location.setPartialProbability(partialSum);
             totalSum += partialSum;
         }
-        for (Location location : otherLocations) {
+        for (Location location : locations) {
             location.setPartialProbability(location.getPartialProbability() / totalSum);
         }
-        ant.addVisitedLocation(select(otherLocations));
+        Location location = select(locations);
+        ant.addVisitedLocation(location);
+        return location;
     }
 
     private Location select(List<Location> wheelProbabilities) {

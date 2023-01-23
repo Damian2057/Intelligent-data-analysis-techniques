@@ -5,7 +5,7 @@ import com.meta.model.Location;
 
 import java.util.List;
 
-public class Algorithm {
+public class AntAlgorithm {
     public static double[][] calculateDistances(List<Location> locations) {
         double[][] distanceMatrix = new double[locations.size()][locations.size()];
         for (int i = 0; i < locations.size(); i++) {

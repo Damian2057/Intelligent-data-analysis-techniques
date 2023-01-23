@@ -4,22 +4,14 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Data
 public class Ant {
 
     private double distance;
     private double currentWeight = 0.0;
+    private double time = 0.0;
     private List<Location> visitedLocations = new ArrayList<>();
-
-    public void drawRandomLocation(List<Location> locations) {
-        List<Location> temp = new ArrayList<>(locations);
-        Random rand = new Random();
-        int randomIndex = rand.nextInt(temp.size());
-        this.visitedLocations.add(temp.get(randomIndex));
-        this.currentWeight += temp.get(randomIndex).getDemand();
-    }
 
     public double getDistance(double[][] distances) {
         distance = 0.0;
@@ -34,6 +26,5 @@ public class Ant {
 
     public void addVisitedLocation(Location location) {
         visitedLocations.add(location);
-        this.currentWeight += location.getDemand();
     }
 }
