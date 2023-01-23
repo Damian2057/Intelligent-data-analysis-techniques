@@ -54,7 +54,7 @@ public class SimulationImp implements Simulation {
             colony.forEach(ant -> ant.getDistance(distanceMatrix));
             updatePheromones();
             this.theBestAnt = AntAlgorithm.findTheBest(theBestAnt, colony);
-            this.theBestAnt = TwoOPT.improveSolution(this.theBestAnt);
+            this.theBestAnt = TwoOPT.improveSolution(this.theBestAnt, distanceMatrix);
 
             if(i % properties.getDisplay() == 0) {
                 logger.info("Round of simulation number: " + i);
@@ -97,7 +97,8 @@ public class SimulationImp implements Simulation {
                 }
             }
             if (time > findMax()) {
-                //the truck came to the warehouse; reset day
+                //the truck came to the warehouse;
+                //that means resetting the day or sending a different truck
                 time = 0.0;
                 weight = 0.0;
             }
