@@ -1,10 +1,14 @@
 package com.meta;
 
-import com.meta.config.LocationReader;
+import com.meta.simulation.SimulationImp;
 
 public class MainApp {
     public static void main(String[] args) {
-        var xd = LocationReader.getLocations("R101").get(0);
-        System.out.println(xd);
+        try {
+            new Thread(new SimulationImp()).start();
+        } catch (Exception e) {
+
+            throw new RuntimeException("Error while collecting data");
+        }
     }
 }

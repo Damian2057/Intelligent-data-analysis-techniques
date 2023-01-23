@@ -13,4 +13,5 @@ public class Location {
     private double readyTime;
     private double dueDate;
     private double serviceTime;
+    private double partialProbability;
 }
