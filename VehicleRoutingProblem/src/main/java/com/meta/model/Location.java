@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Data
 @Builder
-public class Location {
+public class Location  implements Comparable<Location> {
     private int id;
     private double x;
     private double y;
@@ -34,5 +34,10 @@ public class Location {
     @Override
     public int hashCode() {
         return Objects.hash(id, x, y, demand, readyTime, dueDate, serviceTime);
+    }
+
+    @Override
+    public int compareTo(Location o) {
+        return Double.compare(serviceTime, o.getServiceTime());
     }
 }
