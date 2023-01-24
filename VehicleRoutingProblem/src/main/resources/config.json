@@ -3,7 +3,7 @@
   "probabilityOfRandomAttraction": 0.01,
   "alfa": 1,
   "beta": 4,
-  "numberOfIteration": 1000,
+  "numberOfIteration": 500,
   "pheromoneEvaporation": 0.1,
   "vehicleCapacity": 200,
 

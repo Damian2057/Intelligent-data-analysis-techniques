@@ -53,8 +53,9 @@ public class SimulationImp implements Simulation {
 
             colony.forEach(ant -> ant.getDistance(distanceMatrix));
             updatePheromones();
-            this.theBestAnt = AntAlgorithm.findTheBest(theBestAnt, colony);
-            this.theBestAnt = TwoOPT.improveSolution(this.theBestAnt, distanceMatrix);
+
+            this.theBestAnt = AntAlgorithm.findTheBest(this.theBestAnt, colony);
+
 
             if(i % properties.getDisplay() == 0) {
                 logger.info("Round of simulation number: " + i);
@@ -65,7 +66,14 @@ public class SimulationImp implements Simulation {
             this.colony = factory.createColony(properties.getNumberOfAnts());
         }
 
-        logger.info("Solution: " + theBestAnt.getDistance(distanceMatrix) + "Ant: " + theBestAnt.toString());
+        logger.info("Solution: " + theBestAnt.getDistance(distanceMatrix));
+        try {
+            this.theBestAnt = TwoOPT.improveSolution(theBestAnt, distanceMatrix);
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        logger.info("Solution after 2-opt: " + theBestAnt.getDistance(distanceMatrix));
+
         ChartGenerator chartGenerator = new ChartGenerator(dataSets, maxDataSets, String.valueOf(theBestAnt.getDistance(distanceMatrix)));
         chartGenerator.pack();
         chartGenerator.setVisible(true);
@@ -87,7 +95,6 @@ public class SimulationImp implements Simulation {
                 if (availableLocationByWeight.isEmpty()) {
                     ant.addVisitedLocation(base);
                     weight = 0.0;
-                    time = 0.0;
                 } else {
                     Location location = goToLocation(ant, availableLocationByWeight);
                     weight += location.getDemand();
@@ -97,7 +104,7 @@ public class SimulationImp implements Simulation {
                 }
             }
             if (time > findMax()) {
-                //the truck came to the warehouse;
+                //the truck came to the warehouse
                 //that means resetting the day or sending a different truck
                 time = 0.0;
                 weight = 0.0;

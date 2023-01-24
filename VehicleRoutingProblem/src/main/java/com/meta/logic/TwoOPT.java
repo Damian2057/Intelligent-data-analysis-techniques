@@ -9,21 +9,29 @@ import java.util.List;
 
 public class TwoOPT {
 
-    public static Ant improveSolution(Ant ant, double[][] distanceMatrix) {
-        List<Location> locations = new ArrayList<>(ant.getVisitedLocations());
-        Collections.sort(locations);
-        for (Location location : ant.getVisitedLocations()) {
-            for (int i = 1; i < locations.size() - 1; i++) {
-                if (location.getId() != 1) {
-                    //TODO: not implemented
+    public static Ant improveSolution(Ant ant, double[][] distanceMatrix) throws CloneNotSupportedException {
+        for (int i = 1; i < ant.getVisitedLocations().size() - 1; i++) {
+            List<Location> locations = new ArrayList<>(ant.getVisitedLocations());
+            if (locations.get(i).getId() != 1 && locations.get(i + 1).getId() != 1) {
+                swap(locations, i, i + 1);
+                if (getDistance(locations, distanceMatrix) < getDistance(ant.getVisitedLocations(), distanceMatrix)) {
+                    swap(ant.getVisitedLocations(), i, i + 1);
                 }
             }
         }
-
-        return ant;
+        ant.getDistance(distanceMatrix);
+        return ant.clone();
     }
 
-    private void isCorrect() {
+    private static <T> void swap (List<T> l, int i, int j) {
+        Collections.swap(l, i, j);
+    }
 
+    private static double getDistance(List<Location> locations, double[][] distances) {
+        double distance = 0.0;
+        for (int i = 0; i < locations.size() - 1; i++) {
+            distance += distances[locations.get(i).getId() - 1][locations.get(i + 1).getId() - 1];
+        }
+        return distance;
     }
 }
