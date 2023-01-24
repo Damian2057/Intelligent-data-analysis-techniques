@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Ant {
+public class Ant implements Cloneable {
 
     private double distance;
     private double currentWeight = 0.0;
@@ -26,5 +26,15 @@ public class Ant {
 
     public void addVisitedLocation(Location location) {
         visitedLocations.add(location);
+    }
+
+    @Override
+    public Ant clone() throws CloneNotSupportedException {
+        Ant clone = (Ant) super.clone();
+        clone.setCurrentWeight(this.currentWeight);
+        clone.setTime(this.time);
+        clone.setDistance(this.distance);
+        clone.setVisitedLocations(new ArrayList<>(this.visitedLocations));
+        return clone;
     }
 }
