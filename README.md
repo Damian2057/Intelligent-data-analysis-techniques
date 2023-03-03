@@ -1,3 +1,3 @@
-# Metaheuristics
+#  Intelligent-data-analysis-techniques
 
-A repository containing the implementation of metaheuristic algorithms implemented as part of the IT studies
+A repository containing the implementation of algorithms implemented as part of the IT studies
