@@ -93,8 +93,6 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
         return bestSpecimen;
     }
 
-
-
     private double getAvgAdaptation() {
         return generation.stream()
                 .mapToDouble(Specimen::getAdaptationValue)
@@ -148,12 +146,17 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
     private Specimen generateMutant(Specimen specimen, Specimen baseVector) {
         List<Specimen> copy = new ArrayList<>(generation);
         copy.removeAll(List.of(specimen, baseVector));
-        List<Specimen> twoSpecimens = getRandomSpecimens(2, copy);
-
+        List<Specimen> twoSpecimens = getRandomSpecimens(copy);
+        final double[] xRanges = properties.getXRange();
         List<Double> mutatedChain = new ArrayList<>();
         for (int i = 0; i < properties.getDimension(); i++) {
             double v = baseVector.getX().get(i) + properties.getAmplificationFactor() *
                     (twoSpecimens.get(0).getX().get(i) - twoSpecimens.get(1).getX().get(i));
+            if (v < xRanges[0]) {
+                v = xRanges[0];
+            } else if (v > xRanges[1]) {
+                v = xRanges[1];
+            }
             mutatedChain.add(v);
         }
 
@@ -168,9 +171,9 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
         specimen.setAdaptationValue(function.function(specimen.getX()));
     }
 
-    private List<Specimen> getRandomSpecimens(int count, List<Specimen> partialGeneration) {
+    private List<Specimen> getRandomSpecimens(List<Specimen> partialGeneration) {
         List<Specimen> specimenList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 2; i++) {
             int index = random.nextInt(partialGeneration.size());
             Specimen specimen = partialGeneration.remove(index);
             specimenList.add(specimen);
