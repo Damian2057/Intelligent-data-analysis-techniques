@@ -10,12 +10,16 @@ import p.lodz.pl.functions.AdaptationFunction;
 import p.lodz.pl.functions.Functions;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static p.lodz.pl.enums.Const.*;
 
 @Log
 public class DifferentialEvolution implements DifferentialAlgorithm {
 
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final DEProperties properties = Config.getDEProperties();
     private final Random random = new Random();
     private final List<DataSet> dataSets = new ArrayList<>();
@@ -30,57 +34,58 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
         calculateAdaptationForWholeGeneration();
     }
 
-    @Override
-    public void run() {
-        if (ITERATION.getName().equals(properties.getStopCondition())) {
-            for (int i = 0; i < properties.getNumber(); i++) {
-                Specimen baseVector = getBase();
-                for (int j = 0; j < properties.getPopulationSize(); j++) {
-                    Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
-                    Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
-                    calculateSingleAdaptation(testSpecimen);
-                    if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
-                        generation.set(j, testSpecimen);
+    public Future<Specimen> start() {
+        return executor.submit(() -> {
+            log.info("The algorithm has started");
+            if (ITERATION.getName().equals(properties.getStopCondition())) {
+                for (int i = 0; i < properties.getNumber(); i++) {
+                    Specimen baseVector = getBase();
+                    for (int j = 0; j < properties.getPopulationSize(); j++) {
+                        Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
+                        Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
+                        calculateSingleAdaptation(testSpecimen);
+                        if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
+                            generation.set(j, testSpecimen);
+                        }
                     }
+                    this.bestSpecimen = getBestSpecimen();
+                    dataSets.add(new DataSet(i, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
+                    log.info(Thread.currentThread().getName() + "iteration: " + i);
                 }
-                this.bestSpecimen = getBestSpecimen();
-                dataSets.add(new DataSet(i, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
-                log.info(Thread.currentThread().getName() + " current best adaptation: " +
+                log.info(Thread.currentThread().getName() + " result: " +
                         bestSpecimen.getAdaptationValue());
-            }
-            log.info(Thread.currentThread().getName() + " result: " +
-                    bestSpecimen.getAdaptationValue());
-        } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
-            int repetitionCounter = 0;
-            int index = 0;
-            this.bestSpecimen = generation.get(0);
-            while (repetitionCounter < 100) {
-                Specimen baseVector = getBase();
-                for (int j = 0; j < properties.getPopulationSize(); j++) {
-                    Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
-                    Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
-                    calculateSingleAdaptation(testSpecimen);
-                    if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
-                        generation.set(j, testSpecimen);
+            } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
+                int repetitionCounter = 0;
+                int index = 0;
+                this.bestSpecimen = generation.get(0);
+                while (repetitionCounter < 100) {
+                    Specimen baseVector = getBase();
+                    for (int j = 0; j < properties.getPopulationSize(); j++) {
+                        Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
+                        Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
+                        calculateSingleAdaptation(testSpecimen);
+                        if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
+                            generation.set(j, testSpecimen);
+                        }
                     }
+                    double previousBest = bestSpecimen.getAdaptationValue();
+                    this.bestSpecimen = getBestSpecimen();
+                    dataSets.add(new DataSet(index, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
+//                log.info(Thread.currentThread().getName() + " iteration: " + index);
+                    if (previousBest - bestSpecimen.getAdaptationValue() < properties.getNumber()) {
+                        repetitionCounter++;
+                    } else {
+                        repetitionCounter = 0;
+                    }
+                    index++;
                 }
-                double previousBest = bestSpecimen.getAdaptationValue();
-                this.bestSpecimen = getBestSpecimen();
-                dataSets.add(new DataSet(index, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
-                log.info(Thread.currentThread().getName() + " i: " + index + " current best adaptation: " +
-                        bestSpecimen.getAdaptationValue());
-                if (previousBest - bestSpecimen.getAdaptationValue() < properties.getNumber()) {
-                    repetitionCounter++;
-                } else {
-                    repetitionCounter = 0;
-                }
-                index++;
+                log.info(Thread.currentThread().getName() + " result: " +
+                        bestSpecimen.getAdaptationValue() + " found in: " + index);
+            } else {
+                throw new IllegalArgumentException("invalid stop condition of the algorithm");
             }
-            log.info(Thread.currentThread().getName() + " result: " +
-                    bestSpecimen.getAdaptationValue() + "found in: " + index);
-        } else {
-            throw new IllegalArgumentException("invalid stop condition of the algorithm");
-        }
+            return bestSpecimen;
+        });
     }
 
     @Override
