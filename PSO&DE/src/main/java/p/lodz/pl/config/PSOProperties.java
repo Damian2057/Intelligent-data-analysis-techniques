@@ -10,11 +10,11 @@ public class PSOProperties {
     private double inertia;
     private double cognitiveConstant;
     private double socialConstant;
-    private String adaptationFunction;
     private int numberOfIteration;
     private int display;
     private int startTimes;
     private final String stopCondition;
+    private final int adaptationFunction;
 
     public double getXDownBorder() {
         String[] border = xBorder.split(",");

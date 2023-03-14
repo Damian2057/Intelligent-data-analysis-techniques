@@ -5,8 +5,7 @@
   "inertia": 0.2,
   "cognitiveConstant": 0.35,
   "socialConstant": 1,
-  "adaptationFunction": "2 * x^2 - 1.05 * x^4 + (x^6)/6 + x * y + y^2",
-
+  "adaptationFunction": 1,
   "numberOfIteration": 300,
   "display": 1,
   "startTimes": 1,
