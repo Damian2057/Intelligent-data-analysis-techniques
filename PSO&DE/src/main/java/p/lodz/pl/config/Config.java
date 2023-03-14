@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static p.lodz.pl.constants.Const.DE_CONFIG;
-import static p.lodz.pl.constants.Const.PSO_CONFIG;
+import static p.lodz.pl.enums.Const.DE_CONFIG;
+import static p.lodz.pl.enums.Const.PSO_CONFIG;
 
 public final class Config {
     private static DEProperties DEproperties;
