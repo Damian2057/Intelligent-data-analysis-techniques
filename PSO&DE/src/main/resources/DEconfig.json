@@ -5,11 +5,11 @@
   "xRange":[-100, 100],
   "dimension": 20,
 
-  "reproductionType": "rand",
+  "reproductionType": "random",
   "populationSize": 600,
   "amplificationFactor": 0.5,
   "crossOver": {
-    "crossoverType": "rand",
+    "crossoverType": "random",
     "CR": 0.5
   }
 }
