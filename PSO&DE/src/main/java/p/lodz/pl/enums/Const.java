@@ -1,4 +1,4 @@
-package p.lodz.pl.constants;
+package p.lodz.pl.enums;
 
 public enum Const {
     DE_CONFIG("src/main/resources/DEconfig.json"),
