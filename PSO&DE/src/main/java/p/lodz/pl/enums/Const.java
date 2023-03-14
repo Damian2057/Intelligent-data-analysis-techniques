@@ -2,7 +2,9 @@ package p.lodz.pl.enums;
 
 public enum Const {
     DE_CONFIG("src/main/resources/DEconfig.json"),
-    PSO_CONFIG("src/main/resources/PSOconfig.json");
+    PSO_CONFIG("src/main/resources/PSOconfig.json"),
+    ITERATION("iteration"),
+    ACCURACY("accuracy");
 
     private final String name;
 
