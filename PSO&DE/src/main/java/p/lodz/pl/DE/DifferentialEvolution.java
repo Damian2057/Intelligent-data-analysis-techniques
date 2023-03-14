@@ -2,6 +2,7 @@ package p.lodz.pl.DE;
 
 import lombok.extern.java.Log;
 import p.lodz.pl.DE.factory.SpecimenFactory;
+import p.lodz.pl.DE.model.DataSet;
 import p.lodz.pl.DE.model.Specimen;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.DEProperties;
@@ -17,6 +18,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
 
     private final DEProperties properties = Config.getDEProperties();
     private final Random random = new Random();
+    private final List<DataSet> dataSets = new ArrayList<>();
     private final Functions function;
     private final List<Specimen> generation;
     private Specimen bestSpecimen;
@@ -42,6 +44,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                     }
                 }
                 this.bestSpecimen = getBestSpecimen();
+                dataSets.add(new DataSet(i, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
                 log.info(Thread.currentThread().getName() + " current best adaptation: " +
                         bestSpecimen.getAdaptationValue());
             }
@@ -49,19 +52,54 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                     bestSpecimen.getAdaptationValue());
         } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
             int repetitionCounter = 0;
+            int index = 0;
+            this.bestSpecimen = generation.get(0);
             while (repetitionCounter < 100) {
-                Specimen bestInIteration = null;
-
-
-                if (bestSpecimen.getAdaptationValue() - bestInIteration.getAdaptationValue() < properties.getNumber()) {
+                Specimen baseVector = getBase();
+                for (int j = 0; j < properties.getPopulationSize(); j++) {
+                    Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
+                    Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
+                    calculateSingleAdaptation(testSpecimen);
+                    if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
+                        generation.set(j, testSpecimen);
+                    }
+                }
+                double previousBest = bestSpecimen.getAdaptationValue();
+                this.bestSpecimen = getBestSpecimen();
+                dataSets.add(new DataSet(index, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
+                log.info(Thread.currentThread().getName() + " i: " + index + " current best adaptation: " +
+                        bestSpecimen.getAdaptationValue());
+                if (previousBest - bestSpecimen.getAdaptationValue() < properties.getNumber()) {
                     repetitionCounter++;
                 } else {
                     repetitionCounter = 0;
                 }
+                index++;
             }
+            log.info(Thread.currentThread().getName() + " result: " +
+                    bestSpecimen.getAdaptationValue() + "found in: " + index);
         } else {
             throw new IllegalArgumentException("invalid stop condition of the algorithm");
         }
+    }
+
+    @Override
+    public List<DataSet> getDataSets() {
+        return dataSets;
+    }
+
+    @Override
+    public Specimen getBest() {
+        return bestSpecimen;
+    }
+
+
+
+    private double getAvgAdaptation() {
+        return generation.stream()
+                .mapToDouble(Specimen::getAdaptationValue)
+                .average()
+                .orElse(0.0);
     }
 
     private Specimen crossOver(Specimen specimen, Specimen mutantSpecimen) {
