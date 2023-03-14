@@ -1,13 +1,11 @@
 package p.lodz.pl.PSO;
 
-import p.lodz.pl.DE.model.Specimen;
 import p.lodz.pl.PSO.factory.ParticleFactory;
 import p.lodz.pl.PSO.model.Particle;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.PSOProperties;
 import org.apache.commons.lang3.Range;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import p.lodz.pl.functions.AdaptationFunction;
