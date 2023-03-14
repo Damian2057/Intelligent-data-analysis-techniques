@@ -1,0 +1,14 @@
+{
+  "numberOfParticles": 100,
+  "xBorder": "-5, 5",
+  "yBorder": "-5, 5",
+  "inertia": 0.2,
+  "cognitiveConstant": 0.35,
+  "socialConstant": 1,
+  "adaptationFunction": "2 * x^2 - 1.05 * x^4 + (x^6)/6 + x * y + y^2",
+
+  "numberOfIteration": 300,
+  "display": 1,
+  "startTimes": 1,
+  "stopCondition": "iteration"
+}
