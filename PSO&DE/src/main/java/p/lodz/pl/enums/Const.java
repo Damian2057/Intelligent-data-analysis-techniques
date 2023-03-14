@@ -4,7 +4,10 @@ public enum Const {
     DE_CONFIG("src/main/resources/DEconfig.json"),
     PSO_CONFIG("src/main/resources/PSOconfig.json"),
     ITERATION("iteration"),
-    ACCURACY("accuracy");
+    ACCURACY("accuracy"),
+    RANDOM("random"),
+    BEST("best"),
+    EXPONENTIAL("exponential");
 
     private final String name;
 
