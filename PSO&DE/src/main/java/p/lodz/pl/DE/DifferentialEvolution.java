@@ -54,7 +54,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                 int repetitionCounter = 0;
                 int index = 0;
                 this.bestSpecimen = generation.get(0);
-                double repetition = properties.getPopulationSize() * 0.1;
+                double repetition = properties.getPopulationSize() * 0.5;
 
                 while (repetitionCounter < repetition) {
                     differentialEvolution();
