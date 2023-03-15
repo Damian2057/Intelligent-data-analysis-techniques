@@ -34,7 +34,7 @@ public class DifferentialAlgorithmTest {
 
         for (Future<?> f : futures) {
             Object result = f.get();
-            log.info("Solution: " + ((Specimen) result).getAdaptationValue());
+            //log.info("Solution: " + ((Specimen) result).getAdaptationValue());
         }
         log.info("All tasks are completed.");
     }
