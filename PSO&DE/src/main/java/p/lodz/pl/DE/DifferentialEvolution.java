@@ -54,8 +54,9 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                 int repetitionCounter = 0;
                 int index = 0;
                 this.bestSpecimen = generation.get(0);
+                double repetition = properties.getPopulationSize() * 0.1;
 
-                while (repetitionCounter < 100) {
+                while (repetitionCounter < repetition) {
                     differentialEvolution();
                     double previousBest = bestSpecimen.getAdaptationValue();
                     this.bestSpecimen = getBestSpecimen();
@@ -72,7 +73,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                 throw new IllegalArgumentException("invalid stop condition of the algorithm");
             }
             log.info(String.format(ALG_SOL, Thread.currentThread().getName(),
-                    bestSpecimen.getAdaptationValue(), properties.getNumber()));
+                    bestSpecimen.getAdaptationValue(), dataSets.size()));
 
             return this;
         });
