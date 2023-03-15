@@ -4,6 +4,7 @@
   "number": 0.0000001,
   "xRange":[-100, 100],
   "dimension": 20,
+  "startTimes": 2,
 
   "reproductionType": "random",
   "populationSize": 600,

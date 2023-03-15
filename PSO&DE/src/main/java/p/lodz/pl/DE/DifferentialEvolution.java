@@ -19,8 +19,8 @@ import static p.lodz.pl.enums.Const.*;
 @Log
 public class DifferentialEvolution implements DifferentialAlgorithm {
 
-    private static final String ALG_START = "\n================\nThread: %s  has started\n================";
-    private static final String ALG_SOL = "\n================\nThread: %s \nResult: %s \nFound in: %s\n================";
+    private static final String ALG_START = "\n========START========\nThread: %s\n=====================";
+    private static final String ALG_SOL =   "\n========SOLUTION========\nThread: %s \nResult: %s \nFound in: %s\n========================";
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final DEProperties properties = Config.getDEProperties();
     private final Random random = new Random();
@@ -36,7 +36,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
         calculateAdaptationForWholeGeneration();
     }
 
-    public Future<Specimen> start() {
+    public Future<DifferentialAlgorithm> start() {
         return executor.submit(() -> {
             log.info(String.format(ALG_START,
                     Thread.currentThread().getName()));
@@ -74,7 +74,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
             log.info(String.format(ALG_SOL, Thread.currentThread().getName(),
                     bestSpecimen.getAdaptationValue(), properties.getNumber()));
 
-            return bestSpecimen;
+            return this;
         });
     }
 

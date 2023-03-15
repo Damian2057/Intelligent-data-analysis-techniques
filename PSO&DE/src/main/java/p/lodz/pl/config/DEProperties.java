@@ -10,6 +10,7 @@ public class DEProperties {
     private final double number;
     private final double[] xRange;
     private final int dimension;
+    private final int startTimes;
 
     private final String reproductionType;
     private final int populationSize;
