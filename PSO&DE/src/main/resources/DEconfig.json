@@ -1,5 +1,5 @@
 {
-  "adaptationFunction": 2,
+  "adaptationFunction": 1,
   "stopCondition": "accuracy",
   "number": 0.00001,
   "xRange":[-100, 100],
