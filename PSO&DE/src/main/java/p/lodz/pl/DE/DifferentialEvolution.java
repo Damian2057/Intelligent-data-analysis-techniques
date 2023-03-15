@@ -19,6 +19,8 @@ import static p.lodz.pl.enums.Const.*;
 @Log
 public class DifferentialEvolution implements DifferentialAlgorithm {
 
+    private static final String ALG_START = "\n================\nThread: %s  has started\n================";
+    private static final String ALG_SOL = "\n================\nThread: %s \nResult: %s \nFound in: %s\n================";
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final DEProperties properties = Config.getDEProperties();
     private final Random random = new Random();
@@ -36,42 +38,28 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
 
     public Future<Specimen> start() {
         return executor.submit(() -> {
-            log.info("The algorithm has started");
+            log.info(String.format(ALG_START,
+                    Thread.currentThread().getName()));
+
             if (ITERATION.getName().equals(properties.getStopCondition())) {
+
                 for (int i = 0; i < properties.getNumber(); i++) {
-                    Specimen baseVector = getBase();
-                    for (int j = 0; j < properties.getPopulationSize(); j++) {
-                        Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
-                        Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
-                        calculateSingleAdaptation(testSpecimen);
-                        if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
-                            generation.set(j, testSpecimen);
-                        }
-                    }
+                    differentialEvolution();
                     this.bestSpecimen = getBestSpecimen();
                     dataSets.add(new DataSet(i, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
                     log.info(Thread.currentThread().getName() + "iteration: " + i);
                 }
-                log.info(Thread.currentThread().getName() + " result: " +
-                        bestSpecimen.getAdaptationValue());
+
             } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
                 int repetitionCounter = 0;
                 int index = 0;
                 this.bestSpecimen = generation.get(0);
+
                 while (repetitionCounter < 100) {
-                    Specimen baseVector = getBase();
-                    for (int j = 0; j < properties.getPopulationSize(); j++) {
-                        Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
-                        Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
-                        calculateSingleAdaptation(testSpecimen);
-                        if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
-                            generation.set(j, testSpecimen);
-                        }
-                    }
+                    differentialEvolution();
                     double previousBest = bestSpecimen.getAdaptationValue();
                     this.bestSpecimen = getBestSpecimen();
                     dataSets.add(new DataSet(index, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
-//                log.info(Thread.currentThread().getName() + " iteration: " + index);
                     if (previousBest - bestSpecimen.getAdaptationValue() < properties.getNumber()) {
                         repetitionCounter++;
                     } else {
@@ -79,11 +67,13 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                     }
                     index++;
                 }
-                log.info(Thread.currentThread().getName() + " result: " +
-                        bestSpecimen.getAdaptationValue() + " found in: " + index);
+
             } else {
                 throw new IllegalArgumentException("invalid stop condition of the algorithm");
             }
+            log.info(String.format(ALG_SOL, Thread.currentThread().getName(),
+                    bestSpecimen.getAdaptationValue(), properties.getNumber()));
+
             return bestSpecimen;
         });
     }
@@ -96,6 +86,18 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
     @Override
     public Specimen getBest() {
         return bestSpecimen;
+    }
+
+    private void differentialEvolution() {
+        Specimen baseVector = getBase();
+        for (int j = 0; j < properties.getPopulationSize(); j++) {
+            Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
+            Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
+            calculateSingleAdaptation(testSpecimen);
+            if (testSpecimen.getAdaptationValue() < generation.get(j).getAdaptationValue()) {
+                generation.set(j, testSpecimen);
+            }
+        }
     }
 
     private double getAvgAdaptation() {
