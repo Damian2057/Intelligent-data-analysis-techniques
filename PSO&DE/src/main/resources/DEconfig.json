@@ -1,13 +1,13 @@
 {
   "adaptationFunction": 1,
-  "stopCondition": "accuracy",
-  "number": 0.00001,
+  "stopCondition": "iteration",
+  "number": 1000,
   "xRange":[-100, 100],
-  "dimension": 20,
-  "startTimes": 5,
+  "dimension": 30,
+  "startTimes": 1,
 
   "reproductionType": "random",
-  "populationSize": 50,
+  "populationSize": 600,
   "amplificationFactor": 0.5,
   "crossOver": {
     "crossoverType": "random",
