@@ -47,7 +47,6 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                     differentialEvolution();
                     this.bestSpecimen = getBestSpecimen();
                     dataSets.add(new DataSet(i, getAvgAdaptation(), bestSpecimen.getAdaptationValue()));
-                    log.info(Thread.currentThread().getName() + "iteration: " + i);
                 }
 
             } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
