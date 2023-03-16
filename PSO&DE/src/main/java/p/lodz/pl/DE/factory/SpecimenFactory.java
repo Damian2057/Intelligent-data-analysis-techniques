@@ -2,7 +2,7 @@ package p.lodz.pl.DE.factory;
 
 import p.lodz.pl.DE.model.Specimen;
 import p.lodz.pl.config.Config;
-import p.lodz.pl.config.DEProperties;
+import p.lodz.pl.config.Properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ public class SpecimenFactory {
     private final Random random = new Random();
 
     public SpecimenFactory() {
-        DEProperties properties = Config.getDEProperties();
-        this.size = properties.getPopulationSize();
+        Properties properties = Config.getProperties();
+        this.size = properties.getDe().getPopulationSize();
         this.dimension = properties.getDimension();
         this.xRange = properties.getXRange();
 
