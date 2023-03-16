@@ -19,12 +19,13 @@ public class ParticleFactory {
         return swarm;
     }
 
-    private double[] drawValue(double downRange, double upRange) {
+    private List<Double> drawValue(double downRange, double upRange) {
         Random random = new Random();
         int size = prop.getDimension();
-        double[] values = new double[size];
+        List<Double> values = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            values[i] = downRange + (upRange - downRange) * random.nextDouble();
+            double value = downRange + (upRange - downRange) * random.nextDouble();
+            values.add(value);
         }
         return values;
     }
