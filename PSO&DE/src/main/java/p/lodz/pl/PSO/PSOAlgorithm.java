@@ -1,5 +1,7 @@
 package p.lodz.pl.PSO;
 
+import p.lodz.pl.DE.model.DataSet;
+import p.lodz.pl.DE.model.Specimen;
 import p.lodz.pl.PSO.factory.ParticleFactory;
 import p.lodz.pl.PSO.model.Particle;
 import p.lodz.pl.config.Config;
@@ -17,10 +19,8 @@ import static p.lodz.pl.enums.Const.ITERATION;
 public class PSOAlgorithm implements PSO{
 
     private static final PSOProperties properties = Config.getPSOProperties();
-    private static final int NUMBER_OF_ITERATION = Config.getPSOProperties().getNumberOfIteration();
     private static final int DISPLAY = Config.getPSOProperties().getDisplay();
     private static final Range<Double> xRange = Range.between(properties.getXDownBorder(), properties.getXUpBorder());
-    private static final Range<Double> yRange = Range.between(properties.getYDownBorder(), properties.getYUpBorder());
     private final Logger logger = Logger.getLogger(PSO.class.getSimpleName());
     private final ParticleFactory factory = new ParticleFactory();
     private final List<Particle> swarm;
@@ -36,19 +36,28 @@ public class PSOAlgorithm implements PSO{
         bestParticle = swarm.get(0);
     }
 
-    @Override
-    public void run() {
+    public void start() {
         if (ITERATION.getName().equals(properties.getStopCondition())) {
-            for (int i = 0; i < properties.getNumberOfIteration(); i++) {
+            for (int i = 0; i < properties.getNumber(); i++) {
 
             }
         } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
             int counter = 0;
-            while (counter < 100) {
+            while (counter < properties.getNumber()) {
                 counter++;
             }
         } else {
             throw new IllegalArgumentException("invalid stop condition of the algorithm");
         }
+    }
+
+    @Override
+    public List<DataSet> getDataSets() {
+        return null;
+    }
+
+    @Override
+    public Specimen getBest() {
+        return null;
     }
 }
