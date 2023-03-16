@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 import p.lodz.pl.DE.DifferentialAlgorithm;
 import p.lodz.pl.DE.DifferentialEvolution;
 import p.lodz.pl.DE.model.DataSet;
+import p.lodz.pl.PSO.PSOAlgorithm;
 import p.lodz.pl.chart.ChartGenerator;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.DEProperties;
@@ -25,12 +26,16 @@ public class Comparison {
         createTasks();
         log.info("\n========Generating charts========");
 
-        String title = String.format("DifferentialEvolution for %s starts", results.size());
-        ChartGenerator chartGenerator = new ChartGenerator(title, getBestDEResult().getDataSets(),
+        String titleDE = String.format("DifferentialEvolution for %s starts", results.size());
+        String titlePSO = String.format("Particle Swarm Optimization for %s starts", results.size());
+        ChartGenerator chartGeneratorDE = new ChartGenerator(titleDE, getBestDEResult().getDataSets(),
                 getAvgDeResult());
-        chartGenerator.pack();
-        chartGenerator.setVisible(true);
-
+        chartGeneratorDE.pack();
+        chartGeneratorDE.setVisible(true);
+        ChartGenerator chartGeneratorPSO = new ChartGenerator(titlePSO, getBestPSOResult().getDataSets(),
+                getAvgPSOResult());
+        chartGeneratorPSO.pack();
+        chartGeneratorPSO.setVisible(true);
     }
 
     private void createTasks() {
@@ -38,9 +43,9 @@ public class Comparison {
             List<Future<?>> tasks = new ArrayList<>();
             for (int i = 0; i < properties.getStartTimes(); i++) {
                 Future<?> deTask = new DifferentialEvolution().start();
-//                Future<?> psoTask = new PSOAlgorithm().start();
+                Future<?> psoTask = new PSOAlgorithm().start();
                 tasks.add(deTask);
-//                tasks.add(psoTask);
+                tasks.add(psoTask);
 
             }
 
@@ -74,4 +79,24 @@ public class Comparison {
 
         return avgSet;
     }
+
+    private Algorithm getBestPSOResult() {
+        return results.stream()
+                .filter(x -> x instanceof PSOAlgorithm)
+                .min(Comparator.comparingDouble(x -> x.getBestParticle().getAdaptationValue()))
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private List<DataSet> getAvgPSOResult() {
+        int minIndex = results.stream().mapToInt(x -> x.getDataSets().size()).min().orElse(0);
+        List<DataSet> avgSet = new ArrayList<>();
+        for (int i = 0; i < minIndex; i++) {
+            int finalI = i;
+            double value = results.stream().mapToDouble(x -> x.getDataSets().get(finalI).getAvgAdaptation()).average().orElse(0.0);
+            avgSet.add(new DataSet(i, value, -1));
+        }
+
+        return avgSet;
+    }
+
 }

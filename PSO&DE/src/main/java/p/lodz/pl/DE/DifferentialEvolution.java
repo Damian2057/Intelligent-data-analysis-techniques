@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 import p.lodz.pl.DE.factory.SpecimenFactory;
 import p.lodz.pl.DE.model.DataSet;
 import p.lodz.pl.DE.model.Specimen;
+import p.lodz.pl.PSO.model.Particle;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.DEProperties;
 import p.lodz.pl.functions.AdaptationFunction;
@@ -86,6 +87,11 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
     @Override
     public Specimen getBest() {
         return bestSpecimen;
+    }
+
+    @Override
+    public Particle getBestParticle() {
+        return null;
     }
 
     private void differentialEvolution() {

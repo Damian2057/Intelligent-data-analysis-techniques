@@ -11,7 +11,6 @@ public class PSOProperties {
     private double cognitiveConstant;
     private double socialConstant;
     private final double number;
-    private int display;
     private int startTimes;
     private final String stopCondition;
     private final int adaptationFunction;
