@@ -9,7 +9,6 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.ui.ApplicationFrame;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import p.lodz.pl.DE.model.DataSet;
 
 import java.util.List;
 

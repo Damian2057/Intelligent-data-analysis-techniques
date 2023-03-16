@@ -1,8 +1,10 @@
 package p.lodz.pl.DE.model;
 
+import p.lodz.pl.Adaptation;
+
 import java.util.List;
 
-public class Specimen {
+public class Specimen implements Adaptation {
     private final List<Double> x;
     private double adaptationValue = Double.MAX_VALUE;
 
@@ -14,6 +16,7 @@ public class Specimen {
         return x;
     }
 
+    @Override
     public double getAdaptationValue() {
         return adaptationValue;
     }

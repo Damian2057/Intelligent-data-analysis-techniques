@@ -3,11 +3,12 @@ package p.lodz.pl;
 import lombok.extern.java.Log;
 import p.lodz.pl.DE.DifferentialAlgorithm;
 import p.lodz.pl.DE.DifferentialEvolution;
-import p.lodz.pl.DE.model.DataSet;
+import p.lodz.pl.PSO.PSO;
 import p.lodz.pl.PSO.PSOAlgorithm;
 import p.lodz.pl.chart.ChartGenerator;
+import p.lodz.pl.chart.DataSet;
 import p.lodz.pl.config.Config;
-import p.lodz.pl.config.DEProperties;
+import p.lodz.pl.config.Properties;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,8 +20,8 @@ import java.util.concurrent.Future;
 @Log
 public class Comparison {
 
-    private final DEProperties properties = Config.getDEProperties();
-    private final List<Algorithm> results = new ArrayList<>();
+    private final Properties properties = Config.getProperties();
+    private final List<Algorithm<?>> results = new ArrayList<>();
 
     public void compare() {
         createTasks();
@@ -53,7 +54,7 @@ public class Comparison {
             }
 
             for (Future<?> f : tasks) {
-                Algorithm result = (Algorithm) f.get();
+                Algorithm<?> result = (Algorithm<?>) f.get();
                 results.add(result);
             }
         } catch (ExecutionException | InterruptedException e) {
@@ -61,7 +62,7 @@ public class Comparison {
         }
     }
 
-    private Algorithm getBestDEResult() {
+    private Algorithm<?> getBestDEResult() {
         return results.stream()
                 .filter(x -> x instanceof DifferentialAlgorithm)
                 .min(Comparator.comparingDouble(x -> x.getBest().getAdaptationValue()))
@@ -69,30 +70,42 @@ public class Comparison {
     }
 
     private List<DataSet> getAvgDeResult() {
-        int minIndex = results.stream().mapToInt(x -> x.getDataSets().size()).min().orElse(0);
+        int minIndex = results.stream()
+                .filter(x -> x instanceof DifferentialAlgorithm)
+                .mapToInt(x -> x.getDataSets().size())
+                .min().orElse(0);
         List<DataSet> avgSet = new ArrayList<>();
         for (int i = 0; i < minIndex; i++) {
             int finalI = i;
-            double value = results.stream().mapToDouble(x -> x.getDataSets().get(finalI).getAvgAdaptation()).average().orElse(0.0);
+            double value = results.stream()
+                    .filter(x -> x instanceof DifferentialAlgorithm)
+                    .mapToDouble(x -> x.getDataSets().get(finalI).getAvgAdaptation())
+                    .average().orElse(0.0);
             avgSet.add(new DataSet(i, value, -1));
         }
 
         return avgSet;
     }
 
-    private Algorithm getBestPSOResult() {
+    private Algorithm<?> getBestPSOResult() {
         return results.stream()
-                .filter(x -> x instanceof PSOAlgorithm)
-                .min(Comparator.comparingDouble(x -> x.getBestParticle().getAdaptationValue()))
+                .filter(x -> x instanceof PSO)
+                .min(Comparator.comparingDouble(x -> x.getBest().getAdaptationValue()))
                 .orElseThrow(NoSuchElementException::new);
     }
 
     private List<DataSet> getAvgPSOResult() {
-        int minIndex = results.stream().mapToInt(x -> x.getDataSets().size()).min().orElse(0);
+        int minIndex = results.stream()
+                .filter(x -> x instanceof PSO)
+                .mapToInt(x -> x.getDataSets().size())
+                .min().orElse(0);
         List<DataSet> avgSet = new ArrayList<>();
         for (int i = 0; i < minIndex; i++) {
             int finalI = i;
-            double value = results.stream().mapToDouble(x -> x.getDataSets().get(finalI).getAvgAdaptation()).average().orElse(0.0);
+            double value = results.stream()
+                    .filter(x -> x instanceof PSO)
+                    .mapToDouble(x -> x.getDataSets().get(finalI).getAvgAdaptation())
+                    .average().orElse(0.0);
             avgSet.add(new DataSet(i, value, -1));
         }
 

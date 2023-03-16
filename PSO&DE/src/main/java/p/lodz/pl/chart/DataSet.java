@@ -1,4 +1,4 @@
-package p.lodz.pl.DE.model;
+package p.lodz.pl.chart;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

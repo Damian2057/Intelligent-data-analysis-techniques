@@ -1,13 +1,10 @@
 package p.lodz.pl;
 
-import p.lodz.pl.DE.model.DataSet;
-import p.lodz.pl.DE.model.Specimen;
-import p.lodz.pl.PSO.model.Particle;
+import p.lodz.pl.chart.DataSet;
 
 import java.util.List;
 
-public interface Algorithm {
+public interface Algorithm<T extends Adaptation> {
     List<DataSet> getDataSets();
-    Specimen getBest();
-    Particle getBestParticle();
+    T getBest();
 }

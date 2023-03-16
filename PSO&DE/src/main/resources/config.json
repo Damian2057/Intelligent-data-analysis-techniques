@@ -1,0 +1,25 @@
+{
+  "adaptationFunction": 1,
+  "stopCondition": "iteration",
+  "number": 1000,
+  "xRange":[-100, 100],
+  "dimension": 30,
+  "startTimes": 1,
+
+  "de": {
+    "reproductionType": "random",
+    "populationSize": 600,
+    "amplificationFactor": 0.5,
+    "crossOver": {
+      "crossoverType": "random",
+      "CR": 0.5
+    }
+  },
+
+  "pso": {
+    "numberOfParticles": 600,
+    "inertia": 0.5,
+    "cognitiveConstant": 0.9,
+    "socialConstant": 0.9
+  }
+}

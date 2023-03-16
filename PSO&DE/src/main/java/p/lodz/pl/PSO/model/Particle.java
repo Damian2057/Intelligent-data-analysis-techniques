@@ -1,20 +1,22 @@
 package p.lodz.pl.PSO.model;
 
 import lombok.Data;
+import p.lodz.pl.Adaptation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Particle {
+public class Particle implements Adaptation {
     private List<Double> xVector;
-    private double speed;
+    private List<Double> speed;
     private double adaptationValue = Double.MAX_VALUE;
     private List<Double> bestXVector;
     private double bestAdaptation;
 
-    public Particle(List<Double> x) {
+    public Particle(List<Double> x, List<Double> speed) {
         this.xVector = x;
-        this.speed = 0;
+        this.speed = speed;
         this.bestXVector = x;
     }
 
@@ -26,8 +28,7 @@ public class Particle {
                 '}';
     }
 
-    public double setAdaptationValue(double adaptationValue) {
+    public void setAdaptationValue(double adaptationValue) {
         this.adaptationValue = adaptationValue;
-        return adaptationValue;
     }
 }

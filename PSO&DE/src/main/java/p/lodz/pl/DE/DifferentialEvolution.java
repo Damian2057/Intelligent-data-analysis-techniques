@@ -1,37 +1,27 @@
 package p.lodz.pl.DE;
 
 import lombok.extern.java.Log;
+import p.lodz.pl.BaseParams;
 import p.lodz.pl.DE.factory.SpecimenFactory;
-import p.lodz.pl.DE.model.DataSet;
 import p.lodz.pl.DE.model.Specimen;
-import p.lodz.pl.PSO.model.Particle;
-import p.lodz.pl.config.Config;
-import p.lodz.pl.config.DEProperties;
-import p.lodz.pl.functions.AdaptationFunction;
-import p.lodz.pl.functions.Functions;
+import p.lodz.pl.chart.DataSet;
 
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.Future;
 
 import static p.lodz.pl.enums.Const.*;
 
 @Log
-public class DifferentialEvolution implements DifferentialAlgorithm {
+public class DifferentialEvolution extends BaseParams implements DifferentialAlgorithm {
 
-    private static final String ALG_START = "\n========START========\nThread: %s\n=====================";
-    private static final String ALG_SOL =   "\n========SOLUTION========\nThread: %s \nResult: %s \nFound in: %s\n========================";
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final DEProperties properties = Config.getDEProperties();
-    private final Random random = new Random();
-    private final List<DataSet> dataSets = new ArrayList<>();
-    private final Functions function;
     private final List<Specimen> generation;
     private Specimen bestSpecimen;
 
     public DifferentialEvolution() {
-        this.function = new AdaptationFunction(properties.getAdaptationFunction());
+        super();
         SpecimenFactory factory = new SpecimenFactory();
         this.generation = factory.createGeneration();
         calculateAdaptationForWholeGeneration();
@@ -54,7 +44,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
                 int repetitionCounter = 0;
                 int index = 0;
                 this.bestSpecimen = generation.get(0);
-                double repetition = properties.getPopulationSize() * 0.5;
+                double repetition = properties.getDe().getPopulationSize() * 0.5;
 
                 while (repetitionCounter < repetition) {
                     differentialEvolution();
@@ -89,14 +79,9 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
         return bestSpecimen;
     }
 
-    @Override
-    public Particle getBestParticle() {
-        return null;
-    }
-
     private void differentialEvolution() {
         Specimen baseVector = getBase();
-        for (int j = 0; j < properties.getPopulationSize(); j++) {
+        for (int j = 0; j < properties.getDe().getPopulationSize(); j++) {
             Specimen mutantSpecimen = generateMutant(generation.get(j), baseVector);
             Specimen testSpecimen = crossOver(generation.get(j), mutantSpecimen);
             calculateSingleAdaptation(testSpecimen);
@@ -114,9 +99,9 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
     }
 
     private Specimen crossOver(Specimen specimen, Specimen mutantSpecimen) {
-        if (RANDOM.getName().equals(properties.getCrossOver().getCrossoverType())) {
+        if (RANDOM.getName().equals(properties.getDe().getCrossOver().getCrossoverType())) {
             return new Specimen(randomChain(specimen.getX(), mutantSpecimen.getX()));
-        } else if (EXPONENTIAL.getName().equals(properties.getCrossOver().getCrossoverType())) {
+        } else if (EXPONENTIAL.getName().equals(properties.getDe().getCrossOver().getCrossoverType())) {
             return new Specimen(exponentialChain(specimen.getX(), mutantSpecimen.getX()));
         } else {
             throw new IllegalArgumentException("invalid crossover type");
@@ -125,7 +110,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
 
     public List<Double> exponentialChain(List<Double> parent, List<Double> mutant) {
         List<Double> chain = new ArrayList<>();
-        int range = properties.getCrossOver().getNumberOfCopies();
+        int range = properties.getDe().getCrossOver().getNumberOfCopies();
         boolean flag = true;
         for (int i = 0; i < parent.size(); i += range) {
             if (flag) {
@@ -150,7 +135,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
     private List<Double> randomChain(List<Double> parent, List<Double> mutant) {
         List<Double> chain = new ArrayList<>();
         for (int i = 0; i < properties.getDimension(); i++) {
-            double x = random.nextDouble() < properties.getCrossOver().getCR() ? mutant.get(i) : parent.get(i);
+            double x = random.nextDouble() < properties.getDe().getCrossOver().getCR() ? mutant.get(i) : parent.get(i);
             chain.add(x);
         }
         return chain;
@@ -163,7 +148,7 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
         final double[] xRanges = properties.getXRange();
         List<Double> mutatedChain = new ArrayList<>();
         for (int i = 0; i < properties.getDimension(); i++) {
-            double v = baseVector.getX().get(i) + properties.getAmplificationFactor() *
+            double v = baseVector.getX().get(i) + properties.getDe().getAmplificationFactor() *
                     (twoSpecimens.get(0).getX().get(i) - twoSpecimens.get(1).getX().get(i));
             if (v < xRanges[0]) {
                 v = xRanges[0];
@@ -196,9 +181,9 @@ public class DifferentialEvolution implements DifferentialAlgorithm {
     }
 
     private Specimen getBase() {
-        if (RANDOM.getName().equals(properties.getReproductionType())) {
+        if (RANDOM.getName().equals(properties.getDe().getReproductionType())) {
             return generation.get(random.nextInt(generation.size()));
-        } else if (BEST.getName().equals(properties.getReproductionType())){
+        } else if (BEST.getName().equals(properties.getDe().getReproductionType())){
             return getBestSpecimen();
         } else {
             throw new IllegalArgumentException("invalid stop condition of the algorithm");
