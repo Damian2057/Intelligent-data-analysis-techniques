@@ -17,9 +17,9 @@
   },
 
   "pso": {
-    "numberOfParticles": 600,
-    "inertia": 0.5,
-    "cognitiveConstant": 0.9,
-    "socialConstant": 0.9
+    "numberOfParticles": 100,
+    "inertia": 0.9,
+    "cognitiveConstant": 0.8,
+    "socialConstant": 0.7
   }
 }

@@ -19,43 +19,46 @@ public class PSOAlgorithm extends BaseParams implements PSO {
     private static final Range<Double> xRange = Range.between(properties.getXRange()[0], properties.getXRange()[1]);
     private final List<Particle> swarm;
     private Particle bestParticle;
+    private Particle bestSolution;
+
 
     public PSOAlgorithm() {
         super();
         ParticleFactory factory = new ParticleFactory();
         swarm = factory.createSwarm(properties.getPso().getNumberOfParticles());
-        this.bestParticle = swarm.get(0);
+        calculateAdaptation();
     }
 
+    @Override
     public Future<PSO> start() {
         return executor.submit(() -> {
-            log.info(String.format(ALG_START,
-                    Thread.currentThread().getName()));
+            log.info(String.format(ALG_START, Thread.currentThread().getName()));
 
             if (ITERATION.getName().equals(properties.getStopCondition())) {
 
                 for (int i = 0; i < properties.getNumber(); i++) {
                     calculateAdaptation();
-                    bestParticle = getBestParticle();
+                    bestParticle = getBestParticleInIteration().clone();
+                    bestSolution = getTheBestParticle().clone();
                     for (Particle particle : swarm) {
-                        //updateParticlePosition(particle);
+                        updateParticlePosition(particle);
                     }
-                    dataSets.add(new DataSet(i, getAvg(swarm), bestParticle.getAdaptationValue()));
+                    dataSets.add(new DataSet(i, getAvgAdaptation(), bestSolution.getBestAdaptation()));
                 }
 
             } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
 
-                int counter = 0;
-                while (counter < properties.getNumber()) {
-                    counter++;
-                }
+//                int counter = 0;
+//                while (counter < properties.getNumber()) {
+//                    counter++;
+//                }
 
             } else {
                 throw new IllegalArgumentException("invalid stop condition of the algorithm");
             }
             log.info(String.format(ALG_SOL,
                     Thread.currentThread().getName(),
-                    bestParticle.getAdaptationValue(),
+                    bestSolution.getBestAdaptation(),
                     dataSets.size()));
             return this;
         });
@@ -63,47 +66,37 @@ public class PSOAlgorithm extends BaseParams implements PSO {
 
     private void calculateAdaptation() {
         swarm.forEach(particle -> particle.setAdaptationValue(function.function(particle.getXVector())));
+        swarm.forEach(particle -> particle.setBestAdaptation(Math.min(particle.getAdaptationValue(), particle.getBestAdaptation())));
     }
 
-//    private void updateParticlePosition(Particle particle) {
-//        particle.setSpeed(calculateSpeed(particle));
-//
-//        List<Double> newPosition =  new ArrayList<>();
-//        List<Double> currentPosition = particle.getXVector();
-//
-//        for (int i = 0; i < properties.getDimension(); i++) {
-//            double newPos = currentPosition.get(i) + particle.getSpeed();
-//
-//            if (xRange.contains(newPos + particle.getSpeed())) {
-//                newPosition.add(newPos);
-//            } else {
-//                if (newPos + particle.getSpeed() > properties.getXRange()[1]) {
-//                    newPosition.add(properties.getXRange()[1]);
-//                }
-//                else {
-//                    newPosition.add(properties.getXRange()[0]);
-//                }
-//            }
-//        }
-//        particle.setXVector(newPosition);
-//    }
-//
-//    private double calculateSpeed(Particle particle) {
-//        double inertia = properties.getPso().getInertia() * particle.getSpeed();
-//
-//        double socialComponent = socialAcceleration() * euclideanDistance(bestParticle.getXVector(), particle.getXVector());
-//        double cognitiveComponent = cognitiveAcceleration() * euclideanDistance(particle.getBestXVector(), particle.getXVector());
-//        return inertia + socialComponent + cognitiveComponent;
-//    }
-
-    private double euclideanDistance(List<Double> bestXVector, List<Double> xVector) {
-        double distance = 0.0;
-        int size = properties.getDimension();
-        for (int i = 0; i < size; i++) {
-            double diff = xVector.get(i) - bestXVector.get(i);
-            distance += diff * diff;
+    private void updateParticlePosition(Particle particle) {
+        for (int i = 0; i < properties.getDimension(); i++) {
+            double speed = calculateSpeed(particle, i);
+            particle.getSpeed().set(i, speed);
+            double newXPos = particle.getXVector().get(i) + particle.getSpeed().get(i);
+            if (xRange.contains(newXPos)) {
+                particle.getXVector().set(i, newXPos);
+            } else {
+                if (newXPos + particle.getSpeed().get(i) > properties.getXRange()[1]) {
+                    particle.getXVector().set(i, properties.getXRange()[1]);
+                }
+                else {
+                    particle.getXVector().set(i, properties.getXRange()[0]);
+                }
+            }
         }
-        return Math.sqrt(distance);
+    }
+
+    private double calculateSpeed(Particle particle, int index) {
+        double inertia = properties.getPso().getInertia() * particle.getSpeed().get(index);
+
+        double socialComponent = socialAcceleration() * distance(bestParticle.getXVector().get(index), particle.getXVector().get(index));
+        double cognitiveComponent = cognitiveAcceleration() * distance(particle.getBestXVector().get(index), particle.getXVector().get(index));
+        return inertia + socialComponent + cognitiveComponent;
+    }
+
+    private double distance(double bestX, double x) {
+        return Math.abs(bestX - x);
     }
 
     private double socialAcceleration() {
@@ -115,16 +108,14 @@ public class PSOAlgorithm extends BaseParams implements PSO {
     }
 
     private double getLevelOfComponent() {
-        Random random = new Random();
         return 0 + (1) * random.nextDouble();
     }
 
-    private double getAvg(List<Particle> swarm) {
-        double sum = 0;
-        for (Particle particle : swarm) {
-            sum += particle.getBestAdaptation();
-        }
-        return sum / swarm.size();
+    private double getAvgAdaptation() {
+        return swarm.stream()
+                .mapToDouble(Particle::getBestAdaptation)
+                .average()
+                .orElse(0.0);
     }
 
     @Override
@@ -137,9 +128,15 @@ public class PSOAlgorithm extends BaseParams implements PSO {
         return bestParticle;
     }
 
-    private Particle getBestParticle() {
+    private Particle getBestParticleInIteration() {
         return swarm.stream()
                 .min(Comparator.comparingDouble(Particle::getAdaptationValue))
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private Particle getTheBestParticle() {
+        return swarm.stream()
+                .min(Comparator.comparingDouble(Particle::getBestAdaptation))
                 .orElseThrow(NoSuchElementException::new);
     }
 }
