@@ -1,7 +1,10 @@
 {
   "numberOfParticles": 100,
   "xBorder": "-5, 5",
-  "yBorder": "-5, 5",
+  "stopCondition": "iteration",
+  "number": 1000,
+  "xRange":[-100, 100],
+  "dimension": 30,
   "inertia": 0.2,
   "cognitiveConstant": 0.35,
   "socialConstant": 1,
@@ -9,5 +12,4 @@
   "numberOfIteration": 300,
   "display": 1,
   "startTimes": 1,
-  "stopCondition": "iteration"
 }

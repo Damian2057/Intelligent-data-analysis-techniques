@@ -5,6 +5,6 @@ public class PSOAlgorithmTest {
     @Test
     public void algorithmStartTest() {
         PSOAlgorithm algorithm = new PSOAlgorithm();
-        algorithm.run();
+        algorithm.start();
     }
 }

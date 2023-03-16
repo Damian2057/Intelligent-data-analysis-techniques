@@ -14,14 +14,19 @@ public class ParticleFactory {
     public List<Particle> createSwarm(int size) {
         List<Particle> swarm = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            swarm.add(new Particle(drawValue(prop.getXDownBorder(), prop.getXUpBorder()),
-                    drawValue(prop.getYDownBorder(), prop.getYUpBorder())));
+            swarm.add(new Particle(drawValue(prop.getXDownBorder(), prop.getXUpBorder())));
         }
         return swarm;
     }
 
-    private double drawValue(double downRange, double upRange) {
+    private double[] drawValue(double downRange, double upRange) {
         Random random = new Random();
-        return downRange + (upRange - downRange) * random.nextDouble();
+        int size = prop.getDimension();
+        double[] values = new double[size];
+        for (int i = 0; i < size; i++) {
+            values[i] = downRange + (upRange - downRange) * random.nextDouble();
+        }
+        return values;
     }
+
 }

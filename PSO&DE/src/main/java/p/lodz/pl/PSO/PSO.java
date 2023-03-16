@@ -1,4 +1,6 @@
 package p.lodz.pl.PSO;
 
-public interface PSO extends Runnable{
+import p.lodz.pl.Algorithm;
+
+public interface PSO extends Algorithm {
 }
