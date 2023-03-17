@@ -48,10 +48,27 @@ public class PSOAlgorithm extends BaseParams implements PSO {
 
             } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
 
-//                int counter = 0;
-//                while (counter < properties.getNumber()) {
-//                    counter++;
-//                }
+                int repetitionCounter = 0;
+                int index = 0;
+                double repetition = properties.getPso().getNumberOfParticles() * 0.5;
+
+                while (repetitionCounter < repetition) {
+                    calculateAdaptation();
+                    bestParticle = getBestParticleInIteration().clone();
+                    bestSolution = getTheBestParticle().clone();
+                    double best = bestSolution.getBestAdaptation();
+                    for (Particle particle : swarm) {
+                        updateParticlePosition(particle);
+                    }
+                    bestSolution = getTheBestParticle().clone();
+                    dataSets.add(new DataSet(index, getAvgAdaptation(), bestSolution.getBestAdaptation()));
+                    if (best - bestSolution.getBestAdaptation() < properties.getNumber()) {
+                        repetitionCounter++;
+                    } else {
+                        repetitionCounter = 0;
+                    }
+                    index++;
+                }
 
             } else {
                 throw new IllegalArgumentException("invalid stop condition of the algorithm");
