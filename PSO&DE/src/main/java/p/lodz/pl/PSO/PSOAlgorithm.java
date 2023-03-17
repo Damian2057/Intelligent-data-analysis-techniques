@@ -38,7 +38,7 @@ public class PSOAlgorithm extends BaseParams implements PSO {
 
                 for (int i = 0; i < properties.getNumber(); i++) {
                     calculateAdaptation();
-                    bestParticle = getTheBestParticle().clone();
+                    bestParticle = getBestParticleInIteration().clone();
                     bestSolution = getTheBestParticle().clone();
                     for (Particle particle : swarm) {
                         updateParticlePosition(particle);
@@ -90,13 +90,9 @@ public class PSOAlgorithm extends BaseParams implements PSO {
     private double calculateSpeed(Particle particle, int index) {
         double inertia = properties.getPso().getInertia() * particle.getSpeed().get(index);
 
-        double socialComponent = socialAcceleration() * distance(bestParticle.getXVector().get(index), particle.getXVector().get(index));
-        double cognitiveComponent = cognitiveAcceleration() * distance(particle.getBestXVector().get(index), particle.getXVector().get(index));
+        double socialComponent = socialAcceleration() * (bestParticle.getXVector().get(index) - particle.getXVector().get(index));
+        double cognitiveComponent = cognitiveAcceleration() * (particle.getBestXVector().get(index) - particle.getXVector().get(index));
         return inertia + socialComponent + cognitiveComponent;
-    }
-
-    private double distance(double bestX, double x) {
-        return Math.abs(bestX - x);
     }
 
     private double socialAcceleration() {
