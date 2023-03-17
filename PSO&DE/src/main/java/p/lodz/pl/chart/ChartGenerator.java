@@ -51,4 +51,57 @@ public class ChartGenerator extends ApplicationFrame {
         chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
         setContentPane(chartPanel);
     }
+
+    public ChartGenerator(String title, List<DataSet> deDataBestSets,
+                          List<DataSet> deDataAvgSets,
+                          List<DataSet> psoDataBestSets,
+                          List<DataSet> psoDataAvgSets) {
+
+        super("Chart: "+ title);
+
+        final XYSeries bestDeSeries = new XYSeries("fdebest(x)");
+        for (DataSet set : deDataBestSets) {
+            bestDeSeries.add(set.getRound(), set.getBestAdaptation());
+        }
+        final XYSeries avgDeSeries = new XYSeries("fdeavg(x)");
+        for (DataSet set : deDataAvgSets) {
+            avgDeSeries.add(set.getRound(), set.getAvgAdaptation());
+        }
+        final XYSeries bestPsoSeries = new XYSeries("fpsobest(x)");
+        for (DataSet set : psoDataBestSets) {
+            bestPsoSeries.add(set.getRound(), set.getBestAdaptation());
+        }
+        final XYSeries avgPsoSeries = new XYSeries("fpsoavg(x)");
+        for (DataSet set : psoDataAvgSets) {
+            avgPsoSeries.add(set.getRound(), set.getAvgAdaptation());
+        }
+
+        final XYSeriesCollection data = new XYSeriesCollection(bestDeSeries);
+        data.addSeries(avgDeSeries);
+        data.addSeries(bestPsoSeries);
+        data.addSeries(avgPsoSeries);
+
+        final JFreeChart chart = ChartFactory.createXYLineChart(
+                "Chart: "+ title,
+                "Round",
+                "Adaptation",
+                data,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        XYPlot plot = (XYPlot) chart.getPlot();
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesShapesVisible(0, false);
+        renderer.setSeriesShapesVisible(1, false);
+        renderer.setSeriesShapesVisible(2, false);
+        renderer.setSeriesShapesVisible(3, false);
+
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
+        setContentPane(chartPanel);
+    }
 }
