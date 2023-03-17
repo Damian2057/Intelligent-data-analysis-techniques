@@ -25,18 +25,42 @@ public class Comparison {
 
     public void compare() {
         createTasks();
+
+        log.info("\n========Data collecting========");
+        Algorithm<?> de = getBestDEResult();
+        List<DataSet> deBestResult = de.getDataSets();
+        List<DataSet> deAvgResult = getAvgDeResult();
+
+        Algorithm<?> pso = getBestPSOResult();
+        List<DataSet> psoBestResult = pso.getDataSets();
+        List<DataSet> psoAvgResult = getAvgPSOResult();
+
+
         log.info("\n========Generating charts========");
 
-        String titleDE = String.format("DifferentialEvolution for %s starts", results.size());
-        String titlePSO = String.format("Particle Swarm Optimization for %s starts", results.size());
-        ChartGenerator chartGeneratorDE = new ChartGenerator(titleDE, getBestDEResult().getDataSets(),
-                getAvgDeResult());
-        chartGeneratorDE.pack();
-        chartGeneratorDE.setVisible(true);
-        ChartGenerator chartGeneratorPSO = new ChartGenerator(titlePSO, getBestPSOResult().getDataSets(),
-                getAvgPSOResult());
-        chartGeneratorPSO.pack();
-        chartGeneratorPSO.setVisible(true);
+//        String titleDE = String.format("DifferentialEvolution for %s runs", results.size());
+//        ChartGenerator chartGeneratorDE = new ChartGenerator(titleDE, deBestResult,
+//                deAvgResult);
+//        chartGeneratorDE.pack();
+//        chartGeneratorDE.setVisible(true);
+//        String titlePSO = String.format("Particle Swarm Optimization for %s runs", results.size());
+//        ChartGenerator chartGeneratorPSO = new ChartGenerator(titlePSO, psoBestResult,
+//                psoAvgResult);
+//        chartGeneratorPSO.pack();
+//        chartGeneratorPSO.setVisible(true);
+
+        String title = String.format("Comparison of two algorithms for %s runs", results.size());
+        ChartGenerator chartCompare = new ChartGenerator(title,
+                deBestResult,
+                deAvgResult,
+                psoBestResult,
+                psoAvgResult);
+        chartCompare.pack();
+        chartCompare.setVisible(true);
+
+        log.info(String.format("\n========Summary========\nPSO result: %s\nDE result: %s",
+                pso.getBest().getBestAdaptationValue(),
+                de.getBest().getAdaptationValue()));
     }
 
     private void createTasks() {

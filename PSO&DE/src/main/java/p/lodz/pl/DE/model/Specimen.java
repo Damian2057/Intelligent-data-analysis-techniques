@@ -1,5 +1,6 @@
 package p.lodz.pl.DE.model;
 
+import org.apache.commons.lang3.NotImplementedException;
 import p.lodz.pl.Adaptation;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public class Specimen implements Adaptation {
     @Override
     public double getAdaptationValue() {
         return adaptationValue;
+    }
+
+    @Override
+    public double getBestAdaptationValue() {
+        throw new NotImplementedException("This method is not supported");
     }
 
     public void setAdaptationValue(double adaptationValue) {

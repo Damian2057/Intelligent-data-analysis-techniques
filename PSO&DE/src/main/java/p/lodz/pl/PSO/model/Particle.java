@@ -52,4 +52,9 @@ public class Particle implements Adaptation, Cloneable {
             throw new AssertionError();
         }
     }
+
+    @Override
+    public double getBestAdaptationValue() {
+        return bestAdaptation;
+    }
 }
