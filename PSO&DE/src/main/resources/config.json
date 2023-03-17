@@ -1,7 +1,7 @@
 {
   "adaptationFunction": 1,
-  "stopCondition": "iteration",
-  "number": 1000,
+  "stopCondition": "accuracy",
+  "number": 0.000000000001,
   "xRange":[-100, 100],
   "dimension": 5,
   "startTimes": 10,
