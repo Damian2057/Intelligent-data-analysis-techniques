@@ -26,6 +26,9 @@ public class AdaptationFunction implements Functions {
             case 4 -> {
                 return AdaptationFunction.rastriginFunction(x);
             }
+            case 5 -> {
+                return AdaptationFunction.sumPower(x);
+            }
         }
         throw new IllegalArgumentException("invalid function number");
     }
@@ -51,6 +54,12 @@ public class AdaptationFunction implements Functions {
 
     private static double rastriginFunction(List<Double> x) {
         return x.stream().mapToDouble(aDouble -> Math.pow(aDouble, 2) - 10 * Math.cos(2 * Math.PI * aDouble) + 10)
+                .sum();
+    }
+
+    private static double sumPower(List<Double> x) {
+        return IntStream.range(0, x.size() - 1)
+                .mapToDouble(i -> Math.abs(Math.pow(x.get(i), i)))
                 .sum();
     }
 }
