@@ -35,19 +35,7 @@ public class Comparison {
         List<DataSet> psoBestResult = pso.getDataSets();
         List<DataSet> psoAvgResult = getAvgPSOResult();
 
-
         log.info("\n========Generating charts========");
-
-//        String titleDE = String.format("DifferentialEvolution for %s runs", results.size());
-//        ChartGenerator chartGeneratorDE = new ChartGenerator(titleDE, deBestResult,
-//                deAvgResult);
-//        chartGeneratorDE.pack();
-//        chartGeneratorDE.setVisible(true);
-//        String titlePSO = String.format("Particle Swarm Optimization for %s runs", results.size());
-//        ChartGenerator chartGeneratorPSO = new ChartGenerator(titlePSO, psoBestResult,
-//                psoAvgResult);
-//        chartGeneratorPSO.pack();
-//        chartGeneratorPSO.setVisible(true);
 
         String title = String.format("Comparison of two algorithms for %s runs", results.size());
         ChartGenerator chartCompare = new ChartGenerator(title,
@@ -58,9 +46,24 @@ public class Comparison {
         chartCompare.pack();
         chartCompare.setVisible(true);
 
-        log.info(String.format("\n========Summary========\nPSO result: %s\nDE result: %s",
+        double psoAvgRes = getAvgPsoResult();
+        double deAvgRes = getAvgDEResult();
+
+        log.info(String.format("""
+                        \n========Summary========
+                        PSO Best result: %s
+                        PSO Avg result: %s
+                        PSO Deviation: %s
+                        =======================
+                        DE Best result: %s
+                        DE Avg result: %s
+                        DE Deviation: %s""",
                 pso.getBest().getBestAdaptationValue(),
-                de.getBest().getAdaptationValue()));
+                psoAvgRes,
+                getPsoStandardDeviation(psoAvgRes),
+                de.getBest().getAdaptationValue(),
+                deAvgRes,
+                getDeStandardDeviation(deAvgRes)));
     }
 
     private void createTasks() {
@@ -93,6 +96,21 @@ public class Comparison {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+    private double getAvgDEResult() {
+        return results.stream()
+                .filter(algorithm -> algorithm instanceof DifferentialAlgorithm)
+                .mapToDouble(x -> x.getBest().getAdaptationValue())
+                .average()
+                .orElse(0.0);
+    }
+
+    private double getDeStandardDeviation(double avg) {
+        return Math.sqrt(results.stream()
+                .filter(algorithm -> algorithm instanceof DifferentialAlgorithm)
+                .mapToDouble(x -> Math.pow((x.getBest().getAdaptationValue() - avg), 2))
+                .average().orElse(0.0));
+    }
+
     private List<DataSet> getAvgDeResult() {
         int minIndex = results.stream()
                 .filter(x -> x instanceof DifferentialAlgorithm)
@@ -114,8 +132,23 @@ public class Comparison {
     private Algorithm<?> getBestPSOResult() {
         return results.stream()
                 .filter(x -> x instanceof PSO)
-                .min(Comparator.comparingDouble(x -> x.getBest().getAdaptationValue()))
+                .min(Comparator.comparingDouble(x -> x.getBest().getBestAdaptationValue()))
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    private double getAvgPsoResult() {
+        return results.stream()
+                .filter(algorithm -> algorithm instanceof PSO)
+                .mapToDouble(x -> x.getBest().getBestAdaptationValue())
+                .average()
+                .orElse(0.0);
+    }
+
+    private double getPsoStandardDeviation(double avg) {
+        return Math.sqrt(results.stream()
+                .filter(algorithm -> algorithm instanceof PSO)
+                .mapToDouble(x -> Math.pow((x.getBest().getBestAdaptationValue() - avg), 2))
+                .average().orElse(0.0));
     }
 
     private List<DataSet> getAvgPSOResult() {

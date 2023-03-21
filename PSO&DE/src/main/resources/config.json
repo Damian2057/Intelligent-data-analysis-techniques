@@ -1,10 +1,10 @@
 {
-  "adaptationFunction": 6,
-  "stopCondition": "accuracy",
-  "number": 0.000000000001,
-  "xRange":[-5, 10],
+  "adaptationFunction": 1,
+  "stopCondition": "iteration",
+  "number": 1000,
+  "xRange":[-100, 100],
   "dimension": 30,
-  "startTimes": 1,
+  "startTimes": 30,
 
   "de": {
     "reproductionType": "random",
@@ -17,7 +17,7 @@
   },
 
   "pso": {
-    "numberOfParticles": 300,
+    "numberOfParticles": 400,
     "inertia": 0.9,
     "cognitiveConstant": 0.9,
     "socialConstant": 0.1
