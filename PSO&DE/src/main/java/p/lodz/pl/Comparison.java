@@ -37,7 +37,7 @@ public class Comparison {
 
         log.info("\n========Generating charts========");
 
-        String title = String.format("Comparison of two algorithms for %s runs", results.size());
+        String title = String.format("Comparison of two algorithms for %s runs", results.size() / 2);
         ChartGenerator chartCompare = new ChartGenerator(title,
                 deBestResult,
                 deAvgResult,
