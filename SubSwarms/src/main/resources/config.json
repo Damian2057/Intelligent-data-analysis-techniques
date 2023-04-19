@@ -1,0 +1,16 @@
+{
+  "adaptationFunction": 1,
+  "stopCondition": "iteration",
+  "number": 10000,
+  "xRange":[-100, 100],
+  "dimension": 30,
+  "startTimes": 5,
+  "swarmSize": 1000,
+
+  "pso": {
+    "numberOfParticles": 1000,
+    "inertia": 0.9,
+    "cognitiveConstant": 0.9,
+    "socialConstant": 0.1
+  }
+}
