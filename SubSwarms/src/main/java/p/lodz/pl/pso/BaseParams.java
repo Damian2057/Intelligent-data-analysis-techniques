@@ -1,5 +1,6 @@
 package p.lodz.pl.pso;
 
+import org.apache.commons.lang3.Range;
 import p.lodz.pl.chart.DataSet;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.Properties;
@@ -21,6 +22,8 @@ public abstract class BaseParams {
     protected final List<DataSet> dataSets = new ArrayList<>();
     protected final Functions function;
     protected final Random random = new Random();
+    protected static final Range<Double> xRange = Range.between(properties.getXRange()[0], properties.getXRange()[1]);
+
 
     protected BaseParams() {
         this.function = new AdaptationFunction(properties.getAdaptationFunction());
