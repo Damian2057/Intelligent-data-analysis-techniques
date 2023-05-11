@@ -8,13 +8,16 @@ import java.util.List;
 
 @Data
 public class Particle implements Adaptation, Cloneable {
+
+    private int id;
     private List<Double> xVector;
     private List<Double> speed;
     private double adaptationValue = Double.MAX_VALUE;
     private List<Double> bestXVector;
     private double bestAdaptation = Double.MAX_VALUE;
 
-    public Particle(List<Double> x, List<Double> speed) {
+    public Particle(int id, List<Double> x, List<Double> speed) {
+        this.id = id;
         this.xVector = x;
         this.speed = speed;
         this.bestXVector = x;

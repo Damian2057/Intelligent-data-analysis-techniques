@@ -16,7 +16,7 @@ public class ParticleFactory {
     public List<Particle> createSwarm(int size) {
         List<Particle> swarm = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            swarm.add(new Particle(drawValue(properties.getXRange()[0], properties.getXRange()[1]), speedList()));
+            swarm.add(new Particle(i, drawValue(properties.getXRange()[0], properties.getXRange()[1]), speedList()));
         }
         return swarm;
     }
