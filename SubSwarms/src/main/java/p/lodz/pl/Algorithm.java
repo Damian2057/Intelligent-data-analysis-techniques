@@ -7,4 +7,5 @@ import java.util.List;
 public interface Algorithm<T extends Adaptation> {
     List<DataSet> getDataSets();
     T getBest();
+    String getType();
 }

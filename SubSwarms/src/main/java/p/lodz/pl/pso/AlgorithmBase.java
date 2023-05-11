@@ -24,10 +24,12 @@ public abstract class AlgorithmBase {
     protected final List<DataSet> dataSets = new ArrayList<>();
     protected final Functions function;
     protected final Random random = new Random();
+    private final String type;
     protected List<Swarm> swarms = new ArrayList<>();
     protected DecimalFormat format = new DecimalFormat("###.###");
 
-    protected AlgorithmBase() {
+    protected AlgorithmBase(String type) {
+        this.type = type;
         this.function = new AdaptationFunction(properties.getAdaptationFunction());
     }
 
@@ -76,5 +78,9 @@ public abstract class AlgorithmBase {
                 .map(Swarm::getBestParticle)
                 .min(Comparator.comparingDouble(Particle::getBestAdaptation))
                 .orElse(null);
+    }
+
+    public String getType() {
+        return type;
     }
 }

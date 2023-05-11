@@ -17,7 +17,7 @@ import static p.lodz.pl.enums.Const.ITERATION;
 public class OPSOAlgorithm extends AlgorithmBase implements PSO {
 
     public OPSOAlgorithm() {
-        super();
+        super("OPSO");
         for (int i = 0; i < properties.getNumberOfSubSwarms(); i++) {
             this.swarms.add(new Swarm(properties.getSwarmSize()));
         }
@@ -30,7 +30,6 @@ public class OPSOAlgorithm extends AlgorithmBase implements PSO {
 
             if (ITERATION.getName().equals(properties.getStopCondition())) {
                 for (int i = 0; i < properties.getNumber(); i++) {
-                    System.out.println(format.format(i / properties.getNumber() * 100) + " %");
                     applyAlgorithm();
                     applyOsmosis();
 
@@ -45,7 +44,6 @@ public class OPSOAlgorithm extends AlgorithmBase implements PSO {
 
                 List<Double> oldBest = new ArrayList<>(Collections.nCopies(properties.getNumberOfSubSwarms(), Double.MAX_VALUE));
                 while (repetitionCounter < repetition) {
-                    System.out.println("Current best: " + getBestAdaptation());
                     applyAlgorithm();
                     applyOsmosis();
 
