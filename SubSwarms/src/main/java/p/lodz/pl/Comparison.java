@@ -5,6 +5,8 @@ import p.lodz.pl.chart.ChartGenerator;
 import p.lodz.pl.chart.DataSet;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.Properties;
+import p.lodz.pl.pso.EPSOAlgorithm;
+import p.lodz.pl.pso.OPSOAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +66,10 @@ public class Comparison {
         try {
             List<Future<?>> tasks = new ArrayList<>();
             for (int i = 0; i < properties.getStartTimes(); i++) {
-//                Future<?> deTask = new DifferentialEvolution().start();
-//                Future<?> psoTask = new PSOAlgorithm().start();
-//                tasks.add(deTask);
-//                tasks.add(psoTask);
-
+                Future<?> deTask = new EPSOAlgorithm().start();
+                Future<?> psoTask = new OPSOAlgorithm().start();
+                tasks.add(deTask);
+                tasks.add(psoTask);
             }
 
             while (!tasks.stream().allMatch(Future::isDone)) {

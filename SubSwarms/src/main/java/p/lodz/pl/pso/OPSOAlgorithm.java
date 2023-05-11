@@ -4,14 +4,13 @@ import lombok.extern.java.Log;
 import p.lodz.pl.chart.DataSet;
 import p.lodz.pl.pso.model.Particle;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 import static p.lodz.pl.enums.Const.ACCURACY;
 import static p.lodz.pl.enums.Const.ITERATION;
 
 @Log
-public class OPSOAlgorithm extends BaseParams implements PSO {
+public class OPSOAlgorithm extends AlgorithmBase implements PSO {
 
     public OPSOAlgorithm() {
         super();
@@ -28,15 +27,19 @@ public class OPSOAlgorithm extends BaseParams implements PSO {
             if (ITERATION.getName().equals(properties.getStopCondition())) {
 
                 for (int i = 0; i < properties.getNumber(); i++) {
+
+                    System.out.println(format.format(i / properties.getNumber() * 100) + " %");
+
                     for (Swarm env : swarms) {
-                        env.calculateAdaptation();
-                        env.setBestParticle();
                         for (Particle particle : env.getSwarm()) {
                             env.updateParticlePosition(particle);
                         }
+                        env.calculateAdaptation();
+                        env.setBestParticle();
                     }
+                    applyOsmosis();
 
-//                    dataSets.add(new DataSet(i, getAvgAdaptation(), bestSolution.getBestAdaptation()));
+                    dataSets.add(new DataSet(i, getAvgAdaptation(), getBestAdaptation()));
                 }
 
             } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
@@ -71,13 +74,7 @@ public class OPSOAlgorithm extends BaseParams implements PSO {
         });
     }
 
-    @Override
-    public List<DataSet> getDataSets() {
-        return null;
-    }
+    private void applyOsmosis() {
 
-    @Override
-    public Particle getBest() {
-        return null;
     }
 }

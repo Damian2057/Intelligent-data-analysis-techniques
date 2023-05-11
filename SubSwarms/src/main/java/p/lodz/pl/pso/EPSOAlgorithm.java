@@ -6,7 +6,6 @@ import p.lodz.pl.pso.model.Particle;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -14,7 +13,7 @@ import static p.lodz.pl.enums.Const.ACCURACY;
 import static p.lodz.pl.enums.Const.ITERATION;
 
 @Log
-public class EPSOAlgorithm extends BaseParams implements PSO {
+public class EPSOAlgorithm extends AlgorithmBase implements PSO {
 
     public EPSOAlgorithm() {
         super();
@@ -97,19 +96,6 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
         return false;
     }
 
-    private double getAvgAdaptation() {
-        return swarms.stream()
-                .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())
-                .average()
-                .orElseThrow();
-    }
-
-    private double getBestAdaptation() {
-        return swarms.stream()
-                .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())
-                .min().orElseThrow();
-    }
-
     private void updateBestParticlesInEverySwarm() {
         for (int i = 0; i < swarms.size(); i++) {
             List<Double> avgs = new ArrayList<>(Collections.nCopies(properties.getDimension(), 0.0));
@@ -130,18 +116,5 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
 
     private double gauss() {
         return random.nextGaussian(0, 1);
-    }
-
-    @Override
-    public List<DataSet> getDataSets() {
-        return dataSets;
-    }
-
-    @Override
-    public Particle getBest() {
-        return swarms.stream()
-                .map(Swarm::getBestParticle)
-                .min(Comparator.comparingDouble(Particle::getBestAdaptation))
-                .orElse(null);
     }
 }
