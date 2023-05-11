@@ -38,6 +38,16 @@ public abstract class AlgorithmBase {
                 .orElseThrow();
     }
 
+    protected void applyAlgorithm() {
+        for (Swarm env : swarms) {
+            for (Particle particle : env.getSwarm()) {
+                env.updateParticlePosition(particle);
+            }
+            env.calculateAdaptation();
+            env.setBestParticle();
+        }
+    }
+
     public double getBestAdaptation() {
         return swarms.stream()
                 .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())

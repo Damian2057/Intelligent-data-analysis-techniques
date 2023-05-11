@@ -29,16 +29,8 @@ public class EPSOAlgorithm extends AlgorithmBase implements PSO {
 
             if (ITERATION.getName().equals(properties.getStopCondition())) {
                 for (int i = 0; i < properties.getNumber(); i++) {
-
                     System.out.println(format.format(i / properties.getNumber() * 100) + " %");
-
-                    for (Swarm env : swarms) {
-                        for (Particle particle : env.getSwarm()) {
-                            env.updateParticlePosition(particle);
-                        }
-                        env.calculateAdaptation();
-                        env.setBestParticle();
-                    }
+                    applyAlgorithm();
                     updateBestParticlesInEverySwarm();
 
                     dataSets.add(new DataSet(i, getAvgAdaptation(), getBestAdaptation()));
@@ -51,16 +43,8 @@ public class EPSOAlgorithm extends AlgorithmBase implements PSO {
 
                 List<Double> oldBest = new ArrayList<>(Collections.nCopies(properties.getNumberOfSubSwarms(), Double.MAX_VALUE));
                 while (repetitionCounter < repetition) {
-
                     System.out.println("Current best: " + getBestAdaptation());
-
-                    for (Swarm env : swarms) {
-                        for (Particle particle : env.getSwarm()) {
-                            env.updateParticlePosition(particle);
-                        }
-                        env.calculateAdaptation();
-                        env.setBestParticle();
-                    }
+                    applyAlgorithm();
                     updateBestParticlesInEverySwarm();
 
                     dataSets.add(new DataSet(index, getAvgAdaptation(), getBestAdaptation()));
