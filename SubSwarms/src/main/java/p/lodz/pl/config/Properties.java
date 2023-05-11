@@ -12,4 +12,7 @@ public class Properties {
     private final int startTimes;
     private final int swarmSize;
     private final int numberOfSubSwarms;
+    private double inertia;
+    private double cognitiveConstant;
+    private double socialConstant;
 }

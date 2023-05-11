@@ -1,4 +1,4 @@
-# Comparison of PSO and DE algorithms
+# Comparison of OPSO and EPSO algorithms
 
 ## General Parameters
 - "adaptationFunction": [1, 2, 3, ..., 5]
