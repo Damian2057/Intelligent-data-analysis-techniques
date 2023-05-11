@@ -4,6 +4,9 @@ import lombok.extern.java.Log;
 import p.lodz.pl.chart.DataSet;
 import p.lodz.pl.pso.model.Particle;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -26,9 +29,10 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
             log.info(String.format(ALG_START, Thread.currentThread().getName()));
 
             if (ITERATION.getName().equals(properties.getStopCondition())) {
-
                 for (int i = 0; i < properties.getNumber(); i++) {
-                    System.out.println(i);
+
+                    System.out.println(format.format(i / properties.getNumber() * 100) + " %");
+
                     for (Swarm env : swarms) {
                         for (Particle particle : env.getSwarm()) {
                             env.updateParticlePosition(particle);
@@ -38,63 +42,106 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
                     }
                     updateBestParticlesInEverySwarm();
 
-//                    dataSets.add(new DataSet(i, getAvgAdaptation(), bestSolution.getBestAdaptation()));
+                    dataSets.add(new DataSet(i, getAvgAdaptation(), getBestAdaptation()));
                 }
-                System.out.println(swarms);
             } else if (ACCURACY.getName().equals(properties.getStopCondition())) {
 
                 int repetitionCounter = 0;
                 int index = 0;
                 double repetition = properties.getSwarmSize() * 0.5;
 
-//                while (repetitionCounter < repetition) {
-//                    calculateAdaptation();
-//                    bestParticle = getBestParticleInIteration().clone();
-//                    bestSolution = getTheBestParticle().clone();
-//                    double best = bestSolution.getBestAdaptation();
-//                    for (Particle particle : swarm) {
-//                        updateParticlePosition(particle);
-//                    }
-//                    bestSolution = getTheBestParticle().clone();
-//                    dataSets.add(new DataSet(index, getAvgAdaptation(), bestSolution.getBestAdaptation()));
-//                    if (best - bestSolution.getBestAdaptation() < properties.getNumber()) {
-//                        repetitionCounter++;
-//                    } else {
-//                        repetitionCounter = 0;
-//                    }
-//                    index++;
-//                }
+                List<Double> oldBest = new ArrayList<>(Collections.nCopies(properties.getNumberOfSubSwarms(), Double.MAX_VALUE));
+                while (repetitionCounter < repetition) {
 
+                    System.out.println("Current best: " + getBestAdaptation());
+
+                    for (Swarm env : swarms) {
+                        for (Particle particle : env.getSwarm()) {
+                            env.updateParticlePosition(particle);
+                        }
+                        env.calculateAdaptation();
+                        env.setBestParticle();
+                    }
+                    updateBestParticlesInEverySwarm();
+
+                    dataSets.add(new DataSet(index, getAvgAdaptation(), getBestAdaptation()));
+                    if (isImprovementInResult(oldBest)) {
+                        repetitionCounter = 0;
+                    } else {
+                        repetitionCounter++;
+                    }
+                    index++;
+                }
             } else {
                 throw new IllegalArgumentException("invalid stop condition of the algorithm");
             }
 
+            log.info(String.format(ALG_SOL,
+                    Thread.currentThread().getName(),
+                    getBestAdaptation(),
+                    dataSets.size()));
             return this;
         });
     }
 
+    private boolean isImprovementInResult(List<Double> oldBest) {
+        for (int i = 0; i < swarms.size(); i++) {
+            double div = oldBest.get(i) - swarms.get(i).getBestParticle().getBestAdaptation();
+            if (div > properties.getNumber()) {
+                for (int j = 0; j < oldBest.size(); j++) {
+                    oldBest.set(j, swarms.get(j).getBestParticle().getBestAdaptation());
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private double getAvgAdaptation() {
+        return swarms.stream()
+                .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())
+                .average()
+                .orElseThrow();
+    }
+
+    private double getBestAdaptation() {
+        return swarms.stream()
+                .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())
+                .min().orElseThrow();
+    }
+
     private void updateBestParticlesInEverySwarm() {
-//        for (int i = 0; i < swarms.size(); i++) {
-//            for (int j = 0; j < swarms.size(); j++) {
-//                if (i != j) {
-//                    double
-//                    for (int k = 0; k < properties.getNumberOfSubSwarms(); k++) {
-//
-//                    }
-//                    sum += swarms.get(i).getBestParticle().getXVector().get(index);
-//                    sum /= properties.getDimension();
-//                }
-//            }
-//        }
+        for (int i = 0; i < swarms.size(); i++) {
+            List<Double> avgs = new ArrayList<>(Collections.nCopies(properties.getDimension(), 0.0));
+            for (int j = 0; j < swarms.size(); j++) {
+                if (i != j) {
+                    for (int k = 0; k < properties.getDimension(); k++) {
+                        avgs.set(k, swarms.get(j).getBestParticle().getXVector().get(k));
+                    }
+                }
+            }
+            for (int j = 0; j < properties.getDimension(); j++) {
+                double avg = avgs.get(j) / (swarms.size() - 1) * (1.0 + gauss());
+                avgs.set(j, avg);
+            }
+            swarms.get(i).getBestParticle().getXVector().set(i, 0.0);
+        }
+    }
+
+    private double gauss() {
+        return random.nextGaussian(0, 1);
     }
 
     @Override
     public List<DataSet> getDataSets() {
-        return null;
+        return dataSets;
     }
 
     @Override
     public Particle getBest() {
-        return null;
+        return swarms.stream()
+                .map(Swarm::getBestParticle)
+                .min(Comparator.comparingDouble(Particle::getBestAdaptation))
+                .orElse(null);
     }
 }

@@ -1,6 +1,7 @@
 package p.lodz.pl;
 
 import p.lodz.pl.pso.EPSOAlgorithm;
+import p.lodz.pl.pso.OPSOAlgorithm;
 import p.lodz.pl.pso.PSO;
 
 public class Main {
@@ -9,6 +10,5 @@ public class Main {
         comparison.compare();
         PSO pso = new EPSOAlgorithm();
         pso.start();
-        System.out.println(pso.getBest());
     }
 }

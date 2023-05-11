@@ -8,6 +8,7 @@ import p.lodz.pl.functions.AdaptationFunction;
 import p.lodz.pl.functions.Functions;
 import p.lodz.pl.pso.factory.ParticleFactory;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,7 @@ public abstract class BaseParams {
     protected final Functions function;
     protected final Random random = new Random();
     protected List<Swarm> swarms = new ArrayList<>();
+    protected DecimalFormat format = new DecimalFormat("###.###");
 
     protected BaseParams() {
         this.function = new AdaptationFunction(properties.getAdaptationFunction());
