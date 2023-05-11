@@ -48,6 +48,19 @@ public abstract class AlgorithmBase {
         }
     }
 
+    protected boolean isImprovementInResult(List<Double> oldBest) {
+        for (int i = 0; i < swarms.size(); i++) {
+            double div = oldBest.get(i) - swarms.get(i).getBestParticle().getBestAdaptation();
+            if (div > properties.getNumber()) {
+                for (int j = 0; j < oldBest.size(); j++) {
+                    oldBest.set(j, swarms.get(j).getBestParticle().getBestAdaptation());
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     public double getBestAdaptation() {
         return swarms.stream()
                 .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())

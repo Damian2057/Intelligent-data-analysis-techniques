@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 //        Comparison comparison = new Comparison();
 //        comparison.compare();
-        PSO pso = new EPSOAlgorithm();
+        PSO pso = new OPSOAlgorithm();
         pso.start();
     }
 }

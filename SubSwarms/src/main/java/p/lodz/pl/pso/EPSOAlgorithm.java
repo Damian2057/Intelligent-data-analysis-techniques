@@ -2,7 +2,6 @@ package p.lodz.pl.pso;
 
 import lombok.extern.java.Log;
 import p.lodz.pl.chart.DataSet;
-import p.lodz.pl.pso.model.Particle;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,19 +64,6 @@ public class EPSOAlgorithm extends AlgorithmBase implements PSO {
                     dataSets.size()));
             return this;
         });
-    }
-
-    private boolean isImprovementInResult(List<Double> oldBest) {
-        for (int i = 0; i < swarms.size(); i++) {
-            double div = oldBest.get(i) - swarms.get(i).getBestParticle().getBestAdaptation();
-            if (div > properties.getNumber()) {
-                for (int j = 0; j < oldBest.size(); j++) {
-                    oldBest.set(j, swarms.get(j).getBestParticle().getBestAdaptation());
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
     private void updateBestParticlesInEverySwarm() {
