@@ -59,19 +59,19 @@ public class ChartGenerator extends ApplicationFrame {
 
         super("Chart: "+ title);
 
-        final XYSeries bestDeSeries = new XYSeries("fdebest(x)");
+        final XYSeries bestDeSeries = new XYSeries("epsoBest(x)");
         for (DataSet set : deDataBestSets) {
             bestDeSeries.add(set.getRound(), set.getBestAdaptation());
         }
-        final XYSeries avgDeSeries = new XYSeries("fdeavg(x)");
+        final XYSeries avgDeSeries = new XYSeries("epsoAvg(x)");
         for (DataSet set : deDataAvgSets) {
             avgDeSeries.add(set.getRound(), set.getAvgAdaptation());
         }
-        final XYSeries bestPsoSeries = new XYSeries("fpsobest(x)");
+        final XYSeries bestPsoSeries = new XYSeries("opsoBest(x)");
         for (DataSet set : psoDataBestSets) {
             bestPsoSeries.add(set.getRound(), set.getBestAdaptation());
         }
-        final XYSeries avgPsoSeries = new XYSeries("fpsoavg(x)");
+        final XYSeries avgPsoSeries = new XYSeries("opsoAvg(x)");
         for (DataSet set : psoDataAvgSets) {
             avgPsoSeries.add(set.getRound(), set.getAvgAdaptation());
         }

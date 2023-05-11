@@ -2,11 +2,9 @@ package p.lodz.pl.pso;
 
 import lombok.extern.java.Log;
 import p.lodz.pl.chart.DataSet;
-import p.lodz.pl.pso.model.Particle;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -14,10 +12,10 @@ import static p.lodz.pl.enums.Const.ACCURACY;
 import static p.lodz.pl.enums.Const.ITERATION;
 
 @Log
-public class EPSOAlgorithm extends BaseParams implements PSO {
+public class EPSOAlgorithm extends AlgorithmBase implements PSO {
 
     public EPSOAlgorithm() {
-        super();
+        super("EPSO");
         for (int i = 0; i < properties.getNumberOfSubSwarms(); i++) {
             this.swarms.add(new Swarm(properties.getSwarmSize()));
         }
@@ -30,16 +28,7 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
 
             if (ITERATION.getName().equals(properties.getStopCondition())) {
                 for (int i = 0; i < properties.getNumber(); i++) {
-
-                    System.out.println(format.format(i / properties.getNumber() * 100) + " %");
-
-                    for (Swarm env : swarms) {
-                        for (Particle particle : env.getSwarm()) {
-                            env.updateParticlePosition(particle);
-                        }
-                        env.calculateAdaptation();
-                        env.setBestParticle();
-                    }
+                    applyAlgorithm();
                     updateBestParticlesInEverySwarm();
 
                     dataSets.add(new DataSet(i, getAvgAdaptation(), getBestAdaptation()));
@@ -52,16 +41,7 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
 
                 List<Double> oldBest = new ArrayList<>(Collections.nCopies(properties.getNumberOfSubSwarms(), Double.MAX_VALUE));
                 while (repetitionCounter < repetition) {
-
-                    System.out.println("Current best: " + getBestAdaptation());
-
-                    for (Swarm env : swarms) {
-                        for (Particle particle : env.getSwarm()) {
-                            env.updateParticlePosition(particle);
-                        }
-                        env.calculateAdaptation();
-                        env.setBestParticle();
-                    }
+                    applyAlgorithm();
                     updateBestParticlesInEverySwarm();
 
                     dataSets.add(new DataSet(index, getAvgAdaptation(), getBestAdaptation()));
@@ -84,32 +64,6 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
         });
     }
 
-    private boolean isImprovementInResult(List<Double> oldBest) {
-        for (int i = 0; i < swarms.size(); i++) {
-            double div = oldBest.get(i) - swarms.get(i).getBestParticle().getBestAdaptation();
-            if (div > properties.getNumber()) {
-                for (int j = 0; j < oldBest.size(); j++) {
-                    oldBest.set(j, swarms.get(j).getBestParticle().getBestAdaptation());
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private double getAvgAdaptation() {
-        return swarms.stream()
-                .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())
-                .average()
-                .orElseThrow();
-    }
-
-    private double getBestAdaptation() {
-        return swarms.stream()
-                .mapToDouble(swarm -> swarm.getBestParticle().getBestAdaptation())
-                .min().orElseThrow();
-    }
-
     private void updateBestParticlesInEverySwarm() {
         for (int i = 0; i < swarms.size(); i++) {
             List<Double> avgs = new ArrayList<>(Collections.nCopies(properties.getDimension(), 0.0));
@@ -130,18 +84,5 @@ public class EPSOAlgorithm extends BaseParams implements PSO {
 
     private double gauss() {
         return random.nextGaussian(0, 1);
-    }
-
-    @Override
-    public List<DataSet> getDataSets() {
-        return dataSets;
-    }
-
-    @Override
-    public Particle getBest() {
-        return swarms.stream()
-                .map(Swarm::getBestParticle)
-                .min(Comparator.comparingDouble(Particle::getBestAdaptation))
-                .orElse(null);
     }
 }
