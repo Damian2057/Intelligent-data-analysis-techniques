@@ -27,10 +27,13 @@ public class AdaptationFunction implements Functions {
                 return AdaptationFunction.rastriginFunction(x);
             }
             case 5 -> {
-                return AdaptationFunction.sumPower(x);
+                return AdaptationFunction.sumPowerFunction(x);
             }
+            case 6 -> {
+                return AdaptationFunction.brownFunction(x);
+            }
+            default -> throw new IllegalArgumentException("invalid function number");
         }
-        throw new IllegalArgumentException("invalid function number");
     }
 
     private static double sphereFunction(List<Double> x) {
@@ -57,9 +60,16 @@ public class AdaptationFunction implements Functions {
                 .sum();
     }
 
-    private static double sumPower(List<Double> x) {
+    private static double sumPowerFunction(List<Double> x) {
         return IntStream.range(0, x.size() - 1)
                 .mapToDouble(i -> Math.abs(Math.pow(x.get(i), i)))
+                .sum();
+    }
+
+    private static double brownFunction(List<Double> x) {
+        return IntStream.range(0, x.size() - 1)
+                .mapToDouble(i -> Math.pow(Math.pow(x.get(i), 2), (Math.pow(x.get(i + 1), 2) + 1)) +
+                        Math.pow(Math.pow(x.get(i + 1), 2), (Math.pow(x.get(i + 1), 2) + 1)))
                 .sum();
     }
 }
