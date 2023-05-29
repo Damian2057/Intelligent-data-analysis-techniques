@@ -1,4 +1,4 @@
-package p.lodz.pl.algorithm.common;
+package p.lodz.pl.algorithm.pso.model;
 
 import lombok.Data;
 import p.lodz.pl.Adaptation;
