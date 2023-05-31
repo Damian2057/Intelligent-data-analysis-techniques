@@ -3,6 +3,7 @@ package p.lodz.pl.algorithm.pso;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.Range;
 import p.lodz.pl.algorithm.common.AlgorithmBase;
+import p.lodz.pl.algorithm.common.Factory;
 import p.lodz.pl.algorithm.pso.factory.ParticleFactory;
 import p.lodz.pl.algorithm.pso.model.Particle;
 import p.lodz.pl.chart.DataSet;
@@ -25,8 +26,8 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
 
     public PSOAlgorithm() {
         super("PSO");
-        ParticleFactory factory = new ParticleFactory();
-        this.swarm = factory.createSwarm(properties.getSize());
+        Factory<Particle> factory = new ParticleFactory();
+        this.swarm = factory.create(properties.getSize());
         calculateAdaptation();
     }
 

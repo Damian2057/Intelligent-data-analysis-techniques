@@ -1,23 +1,23 @@
-package p.lodz.pl.algorithm.pso.factory;
+package p.lodz.pl.algorithm.ngo.factory;
 
 import p.lodz.pl.algorithm.common.Factory;
-import p.lodz.pl.algorithm.pso.model.Particle;
+import p.lodz.pl.algorithm.ngo.model.GoShawk;
 import p.lodz.pl.config.Config;
 import p.lodz.pl.config.Properties;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class ParticleFactory implements Factory<Particle> {
+public class GoShawkFactory implements Factory<GoShawk> {
 
     private static final Properties properties = Config.getProperties();
 
-    public List<Particle> create(int size) {
-        List<Particle> swarm = new ArrayList<>();
+    @Override
+    public List<GoShawk> create(int size) {
+        List<GoShawk> swarm = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            swarm.add(new Particle(drawValue(properties.getXRange()[0], properties.getXRange()[1]), speedList()));
+            swarm.add(new GoShawk(drawValue(properties.getXRange()[0], properties.getXRange()[1])));
         }
         return swarm;
     }
@@ -31,10 +31,5 @@ public class ParticleFactory implements Factory<Particle> {
             values.add(value);
         }
         return values;
-    }
-
-    private List<Double> speedList() {
-        int size = properties.getDimension();
-        return new ArrayList<>(Collections.nCopies(size, 0.0));
     }
 }

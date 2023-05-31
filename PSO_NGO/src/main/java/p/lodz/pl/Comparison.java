@@ -1,6 +1,7 @@
 package p.lodz.pl;
 
 import lombok.extern.java.Log;
+import p.lodz.pl.algorithm.ngo.NGOAlgorithm;
 import p.lodz.pl.algorithm.pso.PSOAlgorithm;
 import p.lodz.pl.chart.ChartGenerator;
 import p.lodz.pl.chart.DataSet;
@@ -108,9 +109,9 @@ public class Comparison {
             List<Future<?>> tasks = new ArrayList<>();
             for (int i = 0; i < properties.getStartTimes(); i++) {
                 Future<?> psoTask = new PSOAlgorithm().start();
-//                Future<?> psoTask = new OPSOAlgorithm().start();
-//                tasks.add(deTask);
+                Future<?> ngoTask = new NGOAlgorithm().start();
                 tasks.add(psoTask);
+                tasks.add(ngoTask);
             }
 
             long start = System.currentTimeMillis();
