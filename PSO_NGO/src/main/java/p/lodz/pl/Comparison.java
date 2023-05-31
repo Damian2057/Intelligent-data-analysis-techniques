@@ -1,6 +1,8 @@
 package p.lodz.pl;
 
 import lombok.extern.java.Log;
+import p.lodz.pl.algorithm.ngo.NGOAlgorithm;
+import p.lodz.pl.algorithm.pso.PSOAlgorithm;
 import p.lodz.pl.chart.ChartGenerator;
 import p.lodz.pl.chart.DataSet;
 import p.lodz.pl.config.Config;
@@ -23,43 +25,43 @@ public class Comparison {
         createTasks();
 
         log.info("\n========Data collecting========");
-        Algorithm<?> epso = getBestResult("EPSO");
-        List<DataSet> epsoBestResult = epso.getDataSets();
-        List<DataSet> epsoAvgResult = getAvgResult("EPSO");
+        Algorithm<?> pso = getBestResult("PSO");
+        List<DataSet> psoBestResult = pso.getDataSets();
+        List<DataSet> psoAvgResult = getAvgResult("PSO");
 
-        Algorithm<?> opso = getBestResult("OPSO");
-        List<DataSet> opsoBestResult = opso.getDataSets();
-        List<DataSet> opsoAvgResult = getAvgResult("OPSO");
+        Algorithm<?> ngo = getBestResult("NGO");
+        List<DataSet> ngoBestResult = ngo.getDataSets();
+        List<DataSet> ngoAvgResult = getAvgResult("NGO");
 
         log.info("\n========Generating charts========");
 
         String title = String.format("Comparison of two algorithms for %s runs", results.size() / 2);
         ChartGenerator chartCompare = new ChartGenerator(title,
-                epsoBestResult,
-                epsoAvgResult,
-                opsoBestResult,
-                opsoAvgResult);
+                psoBestResult,
+                psoAvgResult,
+                ngoBestResult,
+                ngoAvgResult);
         chartCompare.pack();
         chartCompare.setVisible(true);
 
-        double epsoAvgRes = getAvgFinalResult("EPSO");
-        double opsoAvgRes = getAvgFinalResult("OPSO");
+        double epsoAvgRes = getAvgFinalResult("PSO");
+        double opsoAvgRes = getAvgFinalResult("NGO");
 
         log.info(String.format("""
                         \n========Summary========
-                        EPSO Best result: %s
-                        EPSO Avg result: %s
-                        EPSO Deviation: %s
+                        PSO Best result: %s
+                        PSO Avg result: %s
+                        PSO Deviation: %s
                         =======================
-                        OPSO Best result: %s
-                        OPSO Avg result: %s
-                        OPSO Deviation: %s""",
-                epso.getBest().getBestAdaptationValue(),
+                        NGO Best result: %s
+                        NGO Avg result: %s
+                        NGO Deviation: %s""",
+                pso.getBest().getBestAdaptationValue(),
                 epsoAvgRes,
-                getStandardDeviation(epsoAvgRes, "EPSO"),
-                opso.getBest().getAdaptationValue(),
+                getStandardDeviation(epsoAvgRes, "PSO"),
+                ngo.getBest().getAdaptationValue(),
                 opsoAvgRes,
-                getStandardDeviation(opsoAvgRes, "OPSO")));
+                getStandardDeviation(opsoAvgRes, "NGO")));
     }
 
     private List<DataSet> getAvgResult(String type) {
@@ -106,10 +108,10 @@ public class Comparison {
         try {
             List<Future<?>> tasks = new ArrayList<>();
             for (int i = 0; i < properties.getStartTimes(); i++) {
-//                Future<?> deTask = new EPSOAlgorithm().start();
-//                Future<?> psoTask = new OPSOAlgorithm().start();
-//                tasks.add(deTask);
-//                tasks.add(psoTask);
+                Future<?> psoTask = new PSOAlgorithm().start();
+                Future<?> ngoTask = new NGOAlgorithm().start();
+                tasks.add(psoTask);
+                tasks.add(ngoTask);
             }
 
             long start = System.currentTimeMillis();

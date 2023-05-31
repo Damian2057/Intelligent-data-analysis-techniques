@@ -16,7 +16,7 @@ public class Particle implements Adaptation, Cloneable {
     private List<Double> bestXVector;
     private double bestAdaptation = Double.MAX_VALUE;
 
-    public Particle(int id, List<Double> x, List<Double> speed) {
+    public Particle(List<Double> x, List<Double> speed) {
         this.id = id;
         this.xVector = x;
         this.speed = speed;

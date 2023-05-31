@@ -10,8 +10,7 @@ public class Properties {
     private final double[] xRange;
     private final int dimension;
     private final int startTimes;
-    private final int swarmSize;
-    private final int numberOfSubSwarms;
+    private final int size;
     private final double inertia;
     private final double cognitiveConstant;
     private final double socialConstant;

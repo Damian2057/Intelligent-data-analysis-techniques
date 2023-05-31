@@ -5,8 +5,7 @@
   "xRange":[-100, 100],
   "dimension": 30,
   "startTimes": 10,
-  "swarmSize": 500,
-  "numberOfSubSwarms": 5,
+  "size": 500,
   "inertia": 0.9,
   "cognitiveConstant": 0.6,
   "socialConstant": 0.3
