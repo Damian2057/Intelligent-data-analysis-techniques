@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 public class Particle implements Adaptation, Cloneable {
 
-    private int id;
     private List<Double> xVector;
     private List<Double> speed;
     private double adaptationValue = Double.MAX_VALUE;
@@ -17,18 +16,9 @@ public class Particle implements Adaptation, Cloneable {
     private double bestAdaptation = Double.MAX_VALUE;
 
     public Particle(List<Double> x, List<Double> speed) {
-        this.id = id;
         this.xVector = x;
         this.speed = speed;
         this.bestXVector = x;
-    }
-
-    @Override
-    public String toString() {
-        return "Particle{" +
-                "bestX=" + bestXVector +
-                ", bestAdaptation=" + bestAdaptation +
-                '}';
     }
 
     public void setAdaptationValue(double adaptationValue) {
@@ -40,6 +30,14 @@ public class Particle implements Adaptation, Cloneable {
             this.bestAdaptation = adaptation;
             this.bestXVector = new ArrayList<>(xVector);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Particle{" +
+                "bestX=" + bestXVector +
+                ", bestAdaptation=" + bestAdaptation +
+                '}';
     }
 
     @Override
