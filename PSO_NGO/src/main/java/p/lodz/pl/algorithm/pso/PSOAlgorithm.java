@@ -8,9 +8,7 @@ import p.lodz.pl.algorithm.pso.factory.ParticleFactory;
 import p.lodz.pl.algorithm.pso.model.Particle;
 import p.lodz.pl.chart.DataSet;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.Future;
 
 import static p.lodz.pl.enums.Const.ACCURACY;
@@ -45,6 +43,13 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
                     for (Particle particle : swarm) {
                         updateParticlePosition(particle);
                     }
+                    for (Particle particle : swarm) {
+                        Particle cross = cross(particle, bestSolution, random(1));
+                        cross.setAdaptationValue(function.function(particle.getXVector()));
+                        if (cross.getAdaptationValue() < particle.getAdaptationValue()) {
+                            particle.setBestAdaptation(cross.getAdaptationValue());
+                        }
+                    }
                     dataSets.add(new DataSet(i, getAvgAdaptation(), bestSolution.getBestAdaptation()));
                 }
 
@@ -63,6 +68,13 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
                         updateParticlePosition(particle);
                     }
                     bestSolution = getTheBestParticle().clone();
+                    for (Particle particle : swarm) {
+                        Particle cross = cross(particle, bestSolution, random(1));
+                        cross.setAdaptationValue(function.function(particle.getXVector()));
+                        if (cross.getAdaptationValue() < particle.getAdaptationValue()) {
+                            particle.setBestAdaptation(cross.getAdaptationValue());
+                        }
+                    }
                     dataSets.add(new DataSet(index, getAvgAdaptation(), bestSolution.getBestAdaptation()));
                     if (best - bestSolution.getBestAdaptation() < properties.getNumber()) {
                         repetitionCounter++;
@@ -117,7 +129,7 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
     }
 
     private double calculateSpeed(Particle particle, int index) {
-        double inertia = properties.getInertia() * particle.getSpeed().get(index);
+        double inertia = properties.getPso().getInertia() * particle.getSpeed().get(index);
 
         double socialComponent = socialAcceleration() * (bestParticle.getXVector().get(index) - particle.getXVector().get(index));
         double cognitiveComponent = cognitiveAcceleration() * (particle.getBestXVector().get(index) - particle.getXVector().get(index));
@@ -125,11 +137,11 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
     }
 
     private double socialAcceleration() {
-        return properties.getSocialConstant() * getLevelOfComponent();
+        return properties.getPso().getSocialConstant() * getLevelOfComponent();
     }
 
     private double cognitiveAcceleration() {
-        return properties.getCognitiveConstant() * getLevelOfComponent();
+        return properties.getPso().getCognitiveConstant() * getLevelOfComponent();
     }
 
     private double getLevelOfComponent() {
@@ -153,5 +165,30 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
         return swarm.stream()
                 .min(Comparator.comparingDouble(Particle::getBestAdaptation))
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    private Particle cross(Particle current, Particle best, int barrier) {
+        List<Double> x = new ArrayList<>();
+        x.addAll(getRange(current.getXVector(), 0, barrier));
+        x.addAll(getRange(best.getXVector(), barrier, properties.getDimension()));
+
+        List<Double> s = new ArrayList<>();
+        s.addAll(getRange(current.getSpeed(), 0, barrier));
+        s.addAll(getRange(best.getSpeed(), barrier, properties.getDimension()));
+
+        return new Particle(x, s);
+    }
+
+    private List<Double> getRange(List<Double> list, int start, int end) {
+        List<Double> newList = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            newList.add(list.get(i));
+        }
+
+        return newList;
+    }
+
+    private int random(int min) {
+        return random.nextInt(properties.getDimension() - min) + min;
     }
 }

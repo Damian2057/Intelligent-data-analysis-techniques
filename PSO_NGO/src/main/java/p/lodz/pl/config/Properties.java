@@ -11,8 +11,7 @@ public class Properties {
     private final int dimension;
     private final int startTimes;
     private final int size;
-    private final double inertia;
-    private final double cognitiveConstant;
-    private final double socialConstant;
+    private final PSO pso;
+    private final NGO ngo;
 }
 

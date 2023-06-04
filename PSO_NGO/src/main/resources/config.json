@@ -4,9 +4,11 @@
   "number": 1000,
   "xRange":[-100, 100],
   "dimension": 30,
-  "startTimes": 10,
+  "startTimes": 1,
   "size": 500,
-  "inertia": 0.9,
-  "cognitiveConstant": 0.6,
-  "socialConstant": 0.3
+  "pso": {
+    "inertia": 0.9,
+    "cognitiveConstant": 0.6,
+    "socialConstant": 0.3
+  }
 }
