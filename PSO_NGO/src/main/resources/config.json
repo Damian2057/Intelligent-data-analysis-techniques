@@ -4,7 +4,7 @@
   "number": 1000,
   "xRange":[-100, 100],
   "dimension": 30,
-  "startTimes": 1,
+  "startTimes": 2,
   "size": 500,
   "pso": {
     "inertia": 0.9,

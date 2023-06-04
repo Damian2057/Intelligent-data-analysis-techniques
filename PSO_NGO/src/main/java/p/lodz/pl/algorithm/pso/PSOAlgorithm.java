@@ -43,6 +43,7 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
                     for (Particle particle : swarm) {
                         updateParticlePosition(particle);
                     }
+                    bestSolution = getTheBestParticle().clone();
                     for (Particle particle : swarm) {
                         Particle cross = cross(particle, bestSolution, random(1));
                         cross.setAdaptationValue(function.function(particle.getXVector()));
@@ -50,6 +51,7 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
                             particle.setBestAdaptation(cross.getAdaptationValue());
                         }
                     }
+                    bestSolution = getTheBestParticle().clone();
                     dataSets.add(new DataSet(i, getAvgAdaptation(), bestSolution.getBestAdaptation()));
                 }
 
@@ -75,7 +77,9 @@ public class PSOAlgorithm extends AlgorithmBase implements PSO {
                             particle.setBestAdaptation(cross.getAdaptationValue());
                         }
                     }
+                    bestSolution = getTheBestParticle().clone();
                     dataSets.add(new DataSet(index, getAvgAdaptation(), bestSolution.getBestAdaptation()));
+
                     if (best - bestSolution.getBestAdaptation() < properties.getNumber()) {
                         repetitionCounter++;
                     } else {
