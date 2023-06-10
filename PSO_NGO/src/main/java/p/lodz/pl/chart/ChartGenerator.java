@@ -14,72 +14,34 @@ import java.util.List;
 
 public class ChartGenerator extends ApplicationFrame {
 
-    public ChartGenerator(String title, List<DataSet> dataSets, List<DataSet> avgSets) {
+    public ChartGenerator(String title, List<DataSet> psoDataBestSets,
+                          List<DataSet> psoDataAvgSets,
+                          List<DataSet> ngoDataBestSets,
+                          List<DataSet> ngoDataAvgSets) {
 
         super("Chart: "+ title);
 
-        final XYSeries bestSeries = new XYSeries("fbest(x)");
-        for (DataSet set : dataSets) {
-            bestSeries.add(set.getRound(), set.getBestAdaptation());
-        }
-        final XYSeries avgSeries = new XYSeries("favg(x)");
-        for (DataSet set : avgSets) {
-            avgSeries.add(set.getRound(), set.getAvgAdaptation());
-        }
-
-        final XYSeriesCollection data = new XYSeriesCollection(bestSeries);
-        data.addSeries(avgSeries);
-
-        final JFreeChart chart = ChartFactory.createXYLineChart(
-                "Chart: "+ title,
-                "Round",
-                "Adaptation",
-                data,
-                PlotOrientation.VERTICAL,
-                true,
-                true,
-                false
-        );
-
-        XYPlot plot = (XYPlot) chart.getPlot();
-
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesShapesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
-
-        final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(1000, 540));
-        setContentPane(chartPanel);
-    }
-
-    public ChartGenerator(String title, List<DataSet> deDataBestSets,
-                          List<DataSet> deDataAvgSets,
-                          List<DataSet> psoDataBestSets,
-                          List<DataSet> psoDataAvgSets) {
-
-        super("Chart: "+ title);
-
-        final XYSeries bestDeSeries = new XYSeries("epsoBest(x)");
-        for (DataSet set : deDataBestSets) {
-            bestDeSeries.add(set.getRound(), set.getBestAdaptation());
-        }
-        final XYSeries avgDeSeries = new XYSeries("epsoAvg(x)");
-        for (DataSet set : deDataAvgSets) {
-            avgDeSeries.add(set.getRound(), set.getAvgAdaptation());
-        }
-        final XYSeries bestPsoSeries = new XYSeries("opsoBest(x)");
+        final XYSeries bestPsoSeries = new XYSeries("psoBest(x)");
         for (DataSet set : psoDataBestSets) {
             bestPsoSeries.add(set.getRound(), set.getBestAdaptation());
         }
-        final XYSeries avgPsoSeries = new XYSeries("opsoAvg(x)");
+        final XYSeries avgPsoSeries = new XYSeries("psoAvg(x)");
         for (DataSet set : psoDataAvgSets) {
             avgPsoSeries.add(set.getRound(), set.getAvgAdaptation());
         }
+        final XYSeries bestNgoSeries = new XYSeries("ngoBest(x)");
+        for (DataSet set : ngoDataBestSets) {
+            bestNgoSeries.add(set.getRound(), set.getBestAdaptation());
+        }
+        final XYSeries avgNgoSeries = new XYSeries("ngoAvg(x)");
+        for (DataSet set : ngoDataAvgSets) {
+            avgNgoSeries.add(set.getRound(), set.getAvgAdaptation());
+        }
 
-        final XYSeriesCollection data = new XYSeriesCollection(bestDeSeries);
-        data.addSeries(avgDeSeries);
-        data.addSeries(bestPsoSeries);
+        final XYSeriesCollection data = new XYSeriesCollection(bestPsoSeries);
         data.addSeries(avgPsoSeries);
+        data.addSeries(bestNgoSeries);
+        data.addSeries(avgNgoSeries);
 
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Chart: "+ title,

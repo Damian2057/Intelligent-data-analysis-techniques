@@ -13,6 +13,7 @@ public class GoShawk implements Adaptation, Cloneable {
     private double adaptationValue = Double.MAX_VALUE;
     private List<Double> bestXVector;
     private double bestAdaptation = Double.MAX_VALUE;
+    private Prey prey;
 
     public GoShawk(List<Double> x) {
         this.xVector = x;
